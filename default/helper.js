@@ -41,6 +41,18 @@ module.exports.spawnCreeps = function(roleName, max, enableSmallCreeps, enableBi
 	    }
 	}	
 	
+module.exports.spawnAttackCreeps = function(roleName, max) {
+	    
+	    var creepCount = this.getCreepsRoleCount(roleName) ;
+	    
+	    if (creepCount < max) {
+            if(Game.spawns['Spawn1'].canCreateCreep([ATTACK,MOVE,TOUGH,TOUGH]) == 0) {
+                  var newName = Game.spawns['Spawn1'].createCreep([ATTACK,MOVE,TOUGH,TOUGH], undefined, {role: roleName});
+                 console.log('Spawning new ' + roleName + ':' + newName);
+            }
+	    }
+	}	
+	
 	
 
 module.exports.healTowers = function() {
@@ -82,3 +94,10 @@ module.exports.getConstructionsSites = function(creep) {
     
     return constructionSites;
 }
+
+module.exports.getEnemyTargetsInRange = function(creep) {
+    var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS,3)
+    
+    return targets;
+}
+

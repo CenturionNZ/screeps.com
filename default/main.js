@@ -1,14 +1,11 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleGuard = require('role.guard');
 var helper = require('helper');
 var constants = require('constants');
 
 module.exports.loop = function () {
-    
-    // for(var name in Game.rooms) {
-    //     console.log('Room "'+name+'" has '+Game.rooms[name].energyAvailable+' energy');
-    // }
     
     helper.healTowers();
     
@@ -23,6 +20,8 @@ module.exports.loop = function () {
         helper.spawnCreeps(constants.RoleNames.UPGRADER, constants.MaxCreeps.UPGRADER, true, true);
         
         helper.spawnCreeps(constants.RoleNames.BUILDER, constants.MaxCreeps.BUILDER, true, true);
+        
+        helper.spawnAttackCreeps(constants.RoleNames.GUARD, constants.MaxCreeps.GUARD);
     }
   
 
@@ -36,6 +35,9 @@ module.exports.loop = function () {
         }
         if(creep.memory.role == constants.RoleNames.BUILDER) {
             roleBuilder.run(creep);
+        }
+        if(creep.memory.role == constants.RoleNames.GUARD) {
+            roleGuard.run(creep);
         }
     }
 }
