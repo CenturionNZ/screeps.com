@@ -27,7 +27,7 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MAXREPAIRHITS : 200000,
+    MAXREPAIRHITS : 1000000,
 };
 
 module.exports.RoomPositions = {

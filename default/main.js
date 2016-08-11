@@ -2,6 +2,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleGuard = require('role.guard');
+var roleTower = require('role.tower');
 var helper = require('helper');
 var constants = require('constants');
 
@@ -40,4 +41,10 @@ module.exports.loop = function () {
             roleGuard.run(creep);
         }
     }
+    
+    var towers = helper.getTowers();
+    
+    towers.forEach(tower => roleTower.run(tower));
+    
+ 
 }

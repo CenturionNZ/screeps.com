@@ -77,20 +77,30 @@ var roleBuilder = {
             }
 	    }
 	    else {
-	        var sources = creep.room.find(FIND_SOURCES);
 	        
-            if (creep.memory.harvestSource == null)
-            {
-                if (sources.length > 1)
-                {
-                    creep.memory.harvestSource = 1
+	        var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
+	        
+	        if (droppedEnergy.length > 0) {
+	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(droppedEnergy[0]);
                 }
-                //creep.memory.harvestSource = helper.rand(sources.length)
-            }
-	        
-            if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[creep.memory.harvestSource]);
-            }
+	        }
+	        else {
+    	        var sources = creep.room.find(FIND_SOURCES);
+    	        
+                if (creep.memory.harvestSource == null)
+                {
+                    if (sources.length > 1)
+                    {
+                        creep.memory.harvestSource = 1
+                    }
+                    //creep.memory.harvestSource = helper.rand(sources.length)
+                }
+    	        
+                if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[creep.memory.harvestSource]);
+                }
+	        }
 	    }
         
 	}

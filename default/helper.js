@@ -101,3 +101,9 @@ module.exports.getEnemyTargetsInRange = function(creep) {
     return targets;
 }
 
+module.exports.getTowers = function() {
+    var towers = Game.rooms[constants.RoomNames.MAINROOM].find(
+            FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+        
+        return towers;
+}
