@@ -1,3 +1,12 @@
+module.exports.SpawnNames = {
+    MAINSPAWN : 'Spawn1'
+};
+
+module.exports.Ticks = {
+    CREEPMAXTICKSTOLIVE : 1000,
+    CREEPMINTICKSTOLIVE : 150
+};
+
 module.exports.RoleNames = {
     HARVESTER : 'harvester',
     UPGRADER : 'upgrader',
@@ -13,17 +22,18 @@ module.exports.CreepTasks = {
     REPAIR: 'repair',
     HIDE: 'hide',
     ATTACK: 'attack',
+    RENEW: 'renew',
 };
 
 module.exports.MaxCreeps = {
-    HARVESTER : 3,
+    HARVESTER : 4,
     UPGRADER : 4,
-    BUILDER: 6,
+    BUILDER: 4,
     GUARD: 0
 };
 
 module.exports.RoomNames = {
-    MAINROOM : 'E53N52',
+    MAINROOM : 'E49N54',
 };
 
 module.exports.RepairValues = {
@@ -31,6 +41,15 @@ module.exports.RepairValues = {
 };
 
 module.exports.RoomPositions = {
-    GUARDPOST1 : new RoomPosition(30,29, 'E53N52')
+    GUARDPOST1 : new RoomPosition(30,29, module.exports.RoomNames.MAINROOM),
+    SOURCE0WAITSPOT : new RoomPosition(33,34, module.exports.RoomNames.MAINROOM),
+    SOURCE0HARVESTSPOT: new RoomPosition(34,35, module.exports.RoomNames.MAINROOM),
+    RENEWCREEPSPOT: new RoomPosition(19,33, module.exports.RoomNames.MAINROOM)
+};
+
+module.exports.RoleHarvestSource = {
+    HARVESTER : 1,
+    BUILDER : 1,
+    UPGRADER: 0
 };
 

@@ -6,7 +6,19 @@ var roleUpgrader = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-        if(creep.carry.energy == 0) {
+       //ASSIGN TASKS
+        if (creep.memory.task == constants.CreepTasks.RENEW) {
+             if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                creep.memory.task = null;
+            }
+        }
+        else if (creep.ticksToLive < constants.Ticks.CREEPMINTICKSTOLIVE) {
+            if (creep.memory.task != constants.CreepTasks.RENEW) {
+                creep.memory.task = constants.CreepTasks.RENEW; 
+                creep.say('renewing');
+            }
+        }
+        else if(creep.carry.energy == 0) {
             if (creep.memory.task != constants.CreepTasks.HARVEST) {
                 creep.memory.task = constants.CreepTasks.HARVEST
                 creep.say('harvesting');
@@ -24,27 +36,22 @@ var roleUpgrader = {
     	        creep.say('upgrading');
 	        }
 	    }
-
-	    if(creep.memory.task == constants.CreepTasks.UPGRADE) {
+	    
+	    
+        //ACTION TASKS  
+	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
+	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
+	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+	       }
+	    }
+        else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            
-            if (creep.memory.harvestSource == null)
-            {
-                if (sources.length > 1)
-                {
-                    creep.memory.harvestSource = 1
-                }
-                //creep.memory.harvestSource = helper.rand(sources.length)
-            }
-            
-            if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[creep.memory.harvestSource]);
-            }
+           
+            helper.harvestSource(creep, constants.RoleHarvestSource.UPGRADER);
         }
 	}
 };

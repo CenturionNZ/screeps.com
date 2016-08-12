@@ -10,7 +10,19 @@ var roleBuilder = {
         var repairStructures = helper.getStructuresToRepair(creep);
         var constructionSites = helper.getConstructionsSites(creep);
         
-		if(creep.carry.energy == 0) {
+        //ASSIGN TASKS
+        if (creep.memory.task == constants.CreepTasks.RENEW) {
+             if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                creep.memory.task = null;
+            }
+        }
+        else if (creep.ticksToLive < constants.Ticks.CREEPMINTICKSTOLIVE) {
+            if (creep.memory.task != constants.CreepTasks.RENEW) {
+                creep.memory.task = constants.CreepTasks.RENEW; 
+                creep.say('renewing');
+            }
+        }
+        else if(creep.carry.energy == 0) {
 	        if (creep.memory.task != constants.CreepTasks.HARVEST) {
                 creep.memory.task = constants.CreepTasks.HARVEST 
                 creep.say('harvesting');
@@ -41,7 +53,14 @@ var roleBuilder = {
 	        }
 	    }
 
-	    if(creep.memory.task == constants.CreepTasks.BUILD) {
+
+        //ACTION TASKS    
+	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
+	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
+	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+	       }
+	    }
+        else if(creep.memory.task == constants.CreepTasks.BUILD) {
             if(constructionSites.length) {
                 if(creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSites[0]);
@@ -77,30 +96,8 @@ var roleBuilder = {
             }
 	    }
 	    else {
-	        
-	        var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
-	        
-	        if (droppedEnergy.length > 0) {
-	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(droppedEnergy[0]);
-                }
-	        }
-	        else {
-    	        var sources = creep.room.find(FIND_SOURCES);
-    	        
-                if (creep.memory.harvestSource == null)
-                {
-                    if (sources.length > 1)
-                    {
-                        creep.memory.harvestSource = 1
-                    }
-                    //creep.memory.harvestSource = helper.rand(sources.length)
-                }
-    	        
-                if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[creep.memory.harvestSource]);
-                }
-	        }
+	     
+            helper.harvestSource(creep, constants.RoleHarvestSource.BUILDER);
 	    }
         
 	}

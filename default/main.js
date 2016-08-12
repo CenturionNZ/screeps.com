@@ -3,6 +3,7 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleGuard = require('role.guard');
 var roleTower = require('role.tower');
+var roleSpawn = require('role.spawn');
 var helper = require('helper');
 var constants = require('constants');
 
@@ -12,20 +13,8 @@ module.exports.loop = function () {
     
     helper.clearMemory();
     
-    if (helper.getCreepsRoleCount(constants.RoleNames.HARVESTER) < constants.MaxCreeps.HARVESTER)
-    {
-         helper.spawnCreeps(constants.RoleNames.HARVESTER, constants.MaxCreeps.HARVESTER, true, true);
-    }
-    else
-    {
-        helper.spawnCreeps(constants.RoleNames.UPGRADER, constants.MaxCreeps.UPGRADER, true, true);
-        
-        helper.spawnCreeps(constants.RoleNames.BUILDER, constants.MaxCreeps.BUILDER, true, true);
-        
-        helper.spawnAttackCreeps(constants.RoleNames.GUARD, constants.MaxCreeps.GUARD);
-    }
-  
-
+    roleSpawn.run(Game.spawns[constants.SpawnNames.MAINSPAWN])
+   
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if(creep.memory.role == constants.RoleNames.HARVESTER) {

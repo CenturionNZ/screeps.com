@@ -10,7 +10,19 @@ var roleHarvester = {
         var repairStructures = helper.getStructuresToRepair(creep);
         var constructionSites = helper.getConstructionsSites(creep);
         
-        if(creep.carry.energy == 0) {
+        //ASSIGN TASKS
+        if (creep.memory.task == constants.CreepTasks.RENEW) {
+             if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                creep.memory.task = null;
+            }
+        }
+        else if (creep.ticksToLive < constants.Ticks.CREEPMINTICKSTOLIVE) {
+            if (creep.memory.task != constants.CreepTasks.RENEW) {
+                creep.memory.task = constants.CreepTasks.RENEW; 
+                creep.say('renewing');
+            }
+        }
+        else if(creep.carry.energy == 0) {
             if (creep.memory.task != constants.CreepTasks.HARVEST) {
                 creep.memory.task = constants.CreepTasks.HARVEST; 
                 creep.say('harvesting');
@@ -48,8 +60,14 @@ var roleHarvester = {
     	        creep.say('upgrading');
 	        }
 	    }
-        
-        if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
+	    
+        //ACTION TASKS  
+	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
+	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
+	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+	       }
+	    }
+        else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
             var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
@@ -111,29 +129,9 @@ var roleHarvester = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
             
-            if (creep.memory.harvestSource == null)
-            {
-                if (sources.length > 0)
-                {
-                    creep.memory.harvestSource = 0
-                }
-                //creep.memory.harvestSource = helper.rand(sources.length)
-            }
-            creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS,34, 18);
-            
-            
-            //If a harvester is already harvesting form source, move to waiting spot
-            if (creepsAtSourceSpot.length && creepsAtSourceSpot[0].name != creep.name) {
-                creep.moveTo(35,17);
-            }
-            else {
-            
-                if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[creep.memory.harvestSource]);
-                }
-            }
+            helper.harvestSource(creep, constants.RoleHarvestSource.HARVESTER);
+           
         }
 	}
 };

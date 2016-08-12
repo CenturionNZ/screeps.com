@@ -25,29 +25,29 @@ module.exports.getCreepsRoleCount = function(roleName) {
 }
 	
 	
-module.exports.spawnCreeps = function(roleName, max, enableSmallCreeps, enableBigCreeps) {
+module.exports.spawnCreeps = function(spawn, roleName, max, enableSmallCreeps, enableBigCreeps) {
 	    
 	    var creepCount = this.getCreepsRoleCount(roleName) ;
 	    
 	    if (creepCount < max) {
-            if (enableBigCreeps && Game.spawns['Spawn1'].canCreateCreep([WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE]) == 0) {
-                var newName = Game.spawns['Spawn1'].createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName});
+            if (enableBigCreeps && spawn.canCreateCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE]) == 0) {
+                var newName = spawn.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, {role: roleName});
                 console.log('Spawning new Big ' + roleName + ':' + newName);
             }
-            else if(enableSmallCreeps && Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE]) == 0) {
-                  var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: roleName});
+            else if(enableSmallCreeps && spawn.canCreateCreep([WORK,CARRY,MOVE]) == 0) {
+                  var newName = spawn.createCreep([WORK,CARRY,MOVE], undefined, {role: roleName});
                  console.log('Spawning new ' + roleName + ':' + newName);
             }
 	    }
 	}	
 	
-module.exports.spawnAttackCreeps = function(roleName, max) {
+module.exports.spawnAttackCreeps = function(spawn, roleName, max) {
 	    
 	    var creepCount = this.getCreepsRoleCount(roleName) ;
 	    
 	    if (creepCount < max) {
-            if(Game.spawns['Spawn1'].canCreateCreep([ATTACK,MOVE,TOUGH,TOUGH]) == 0) {
-                  var newName = Game.spawns['Spawn1'].createCreep([ATTACK,MOVE,TOUGH,TOUGH], undefined, {role: roleName});
+            if(spawn.canCreateCreep([ATTACK,MOVE,TOUGH,TOUGH]) == 0) {
+                  var newName = spawn.createCreep([ATTACK,MOVE,TOUGH,TOUGH], undefined, {role: roleName});
                  console.log('Spawning new ' + roleName + ':' + newName);
             }
 	    }
@@ -106,4 +106,55 @@ module.exports.getTowers = function() {
             FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
         
         return towers;
+}
+
+module.exports.harvestSource = function(creep, sourceNumber) {
+    
+            var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
+	        
+	        if (droppedEnergy.length > 0) {
+	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(droppedEnergy[0]);
+                }
+	        }
+	        else {
+                
+                var sources = creep.room.find(FIND_SOURCES);
+                
+                if (creep.memory.harvestSource == null)
+                {
+                    if (sourceNumber == null) {
+                        sourceNumber = module.exports.rand(sources.length);
+                        creep.say('source: ' + sourceNumber);
+                    }
+                    
+                    if (sources.length > sourceNumber)
+                    {
+                        creep.memory.harvestSource = sourceNumber;
+                    }
+                }
+                
+                if (sourceNumber == 0){
+                    creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS, constants.RoomPositions.SOURCE0HARVESTSPOT);
+                    
+                      
+                    //If a harvester is already harvesting form source, move to waiting spot
+                    if (creepsAtSourceSpot.length && creepsAtSourceSpot[0].name != creep.name) {
+                        creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
+                    }
+                    else {
+                    
+                        if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(sources[creep.memory.harvestSource]);
+                        }
+                    }
+                
+                }
+                else {
+                         if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(sources[creep.memory.harvestSource]);
+                        }
+                }
+	        }
+           
 }
