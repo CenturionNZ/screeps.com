@@ -12,7 +12,7 @@ var roleSpawn = {
             if (creep.ticksToLive < constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 spawn.renewCreep(creep);
                 
-                console.log('Renewing creep: ' + creep.name);
+                console.log('Renewing creep: ' + creep.name + '. ' + creep.ticksToLive + ' ttl');
             }
         } 
         else {

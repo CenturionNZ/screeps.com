@@ -139,7 +139,7 @@ module.exports.harvestSource = function(creep, sourceNumber) {
                     
                       
                     //If a harvester is already harvesting form source, move to waiting spot
-                    if (creepsAtSourceSpot.length && creepsAtSourceSpot[0].name != creep.name) {
+                    if (creepsAtSourceSpot.length && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
                         creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
                     }
                     else {

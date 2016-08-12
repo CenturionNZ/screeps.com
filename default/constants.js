@@ -37,12 +37,12 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MAXREPAIRHITS : 1000000,
+    MAXREPAIRHITS : 500000,
 };
 
 module.exports.RoomPositions = {
     GUARDPOST1 : new RoomPosition(30,29, module.exports.RoomNames.MAINROOM),
-    SOURCE0WAITSPOT : new RoomPosition(33,34, module.exports.RoomNames.MAINROOM),
+    SOURCE0WAITSPOT : new RoomPosition(32,34, module.exports.RoomNames.MAINROOM),
     SOURCE0HARVESTSPOT: new RoomPosition(34,35, module.exports.RoomNames.MAINROOM),
     RENEWCREEPSPOT: new RoomPosition(19,33, module.exports.RoomNames.MAINROOM)
 };
