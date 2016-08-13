@@ -77,7 +77,7 @@ var roleBuilder = {
 	        
 	        var object = Game.getObjectById(creep.memory.repairStructureId)
 	        
-	        //Repair strucuture to half way
+	        //Repair strucuture to object max hits or to global maximum hits
 	        if (object != null && object.hits < constants.RepairValues.MAXREPAIRHITS && object.hits <  object.hitsMax)
 	        {
 	             if(creep.repair(object) == ERR_NOT_IN_RANGE) {

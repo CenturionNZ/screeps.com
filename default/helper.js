@@ -30,8 +30,8 @@ module.exports.spawnCreeps = function(spawn, roleName, max, enableSmallCreeps, e
 	    var creepCount = this.getCreepsRoleCount(roleName) ;
 	    
 	    if (creepCount < max) {
-            if (enableBigCreeps && spawn.canCreateCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE]) == 0) {
-                var newName = spawn.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, {role: roleName});
+            if (enableBigCreeps && spawn.canCreateCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]) == 0) {
+                var newName = spawn.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName});
                 console.log('Spawning new Big ' + roleName + ':' + newName);
             }
             else if(enableSmallCreeps && spawn.canCreateCreep([WORK,CARRY,MOVE]) == 0) {
@@ -82,9 +82,24 @@ module.exports.getEmptyEnergyStructures = function(creep) {
 }
 
 module.exports.getStructuresToRepair = function(creep) {
-    var repairStructures = creep.room.find(FIND_STRUCTURES, {
-            filter: object => object.hits < (object.hitsMax / 3) && object.hits  < constants.RepairValues.MAXREPAIRHITS
+    //get ramparts
+    var repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
+            filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues.MINRAMPARTHITS
         });
+    
+    //get walls    
+    if (repairStructures.length == 0) {
+        var repairStructures = creep.room.find(FIND_STRUCTURES, {
+                filter: object => object.structureType == STRUCTURE_WALL && object.hits  < constants.RepairValues.MINWALLHITS
+            });
+    }
+    
+    //get everything else   
+    if (repairStructures.length == 0) {
+          repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
+            filter: object => object.hits  < (object.hitsMax / 3)
+        });
+    } 
         
         return repairStructures;
 }

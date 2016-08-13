@@ -37,7 +37,9 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MAXREPAIRHITS : 500000,
+    MINWALLHITS : 300000,
+    MINRAMPARTHITS : 200000,
+    MAXREPAIRHITS : 300000
 };
 
 module.exports.RoomPositions = {
