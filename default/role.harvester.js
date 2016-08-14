@@ -130,7 +130,7 @@ var roleHarvester = {
         }
         else {
             
-            helper.harvestSource(creep, constants.RoleHarvestSource.HARVESTER);
+            helper.harvestSource(creep, constants.RoleHarvestSource.HARVESTER, false);
            
         }
 	}

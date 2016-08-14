@@ -81,27 +81,44 @@ module.exports.getEmptyEnergyStructures = function(creep) {
         return energyStructures;
 }
 
-module.exports.getStructuresToRepair = function(creep) {
-    //get ramparts
-    var repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues.MINRAMPARTHITS
+module.exports.getEmptyContainers = function(creep) {
+         var energyStructures = creep.pos.findInRange(FIND_STRUCTURES, 5, {
+            filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) < object.storeCapacity
         });
+        
+        return energyStructures;
+}
+
+module.exports.getStructuresToRepair = function(creep) {
+    
+    //get roads
+     var repairStructures = creep.room.find(FIND_STRUCTURES, {
+                filter: object => object.structureType == STRUCTURE_ROAD && object.hits  < (object.hitsMax / 3)
+            });
+
+    
+    //get ramparts
+    if (repairStructures.length == 0) {
+          repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
+                filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues.MINRAMPARTHITS
+            });
+    }
     
     //get walls    
     if (repairStructures.length == 0) {
-        var repairStructures = creep.room.find(FIND_STRUCTURES, {
+         repairStructures = creep.room.find(FIND_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_WALL && object.hits  < constants.RepairValues.MINWALLHITS
             });
     }
     
     //get everything else   
     if (repairStructures.length == 0) {
-          repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: object => object.hits  < (object.hitsMax / 3)
+          repairStructures = creep.room.find(FIND_STRUCTURES, {
+            filter: object => object.hits  < (object.hitsMax / 3) && object.hits <  constants.RepairValues.MAXREPAIRHITS
         });
     } 
-        
-        return repairStructures;
+    
+    return repairStructures;
 }
 
 module.exports.getConstructionsSites = function(creep) {
@@ -123,11 +140,11 @@ module.exports.getTowers = function() {
         return towers;
 }
 
-module.exports.harvestSource = function(creep, sourceNumber) {
-    
+module.exports.harvestSource = function(creep, sourceNumber, harvestFromDrops) {
+            
             var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
-	        
-	        if (droppedEnergy.length > 0) {
+            
+	        if (harvestFromDrops == true && droppedEnergy.length > 0) {
 	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(droppedEnergy[0]);
                 }
@@ -149,12 +166,12 @@ module.exports.harvestSource = function(creep, sourceNumber) {
                     }
                 }
                 
-                if (sourceNumber == 0){
+                if (creep.memory.harvestSource == 0){
                     creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS, constants.RoomPositions.SOURCE0HARVESTSPOT);
                     
                       
                     //If a harvester is already harvesting form source, move to waiting spot
-                    if (creepsAtSourceSpot.length && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
+                    if (creep.pos != constants.RoomPositions.SOURCE0HARVESTSPOT && creepsAtSourceSpot.length > 0 && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
                         creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
                     }
                     else {
@@ -173,3 +190,38 @@ module.exports.harvestSource = function(creep, sourceNumber) {
 	        }
            
 }
+
+module.exports.getEnergyFromContainer = function(creep, containerNumber, harvestFromDrops) {
+      
+            var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
+            
+	        if (harvestFromDrops == true && droppedEnergy.length > 0) {
+	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(droppedEnergy[0]);
+                }
+	        }
+	        else {
+                
+            containers = creep.room.find(FIND_STRUCTURES, {
+                filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) > 0
+            });
+                
+                if (creep.memory.harvestSource == null)
+                {
+                    if (containerNumber == null) {
+                        containerNumber = module.exports.rand(containers.length);
+                    }
+                    
+                    if (containers.length > containerNumber)
+                    {
+                        creep.memory.harvestSource = containerNumber;
+                    }
+                }
+        
+                if(creep.withdraw(containers[creep.memory.harvestSource], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(containers[creep.memory.harvestSource]);
+                }
+	        }
+    
+}
+            

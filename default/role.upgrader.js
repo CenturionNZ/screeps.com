@@ -51,7 +51,7 @@ var roleUpgrader = {
         }
         else {
            
-            helper.harvestSource(creep, constants.RoleHarvestSource.UPGRADER);
+            helper.harvestSource(creep, constants.RoleHarvestSource.UPGRADER, false);
         }
 	}
 };

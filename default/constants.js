@@ -11,7 +11,9 @@ module.exports.RoleNames = {
     HARVESTER : 'harvester',
     UPGRADER : 'upgrader',
     BUILDER: 'builder',
-    GUARD: 'guard'
+    GUARD: 'guard',
+    TRANSFERER: 'transferer',
+    HARVESTER2 : 'harvester2'
 };
 
 module.exports.CreepTasks = {
@@ -26,9 +28,9 @@ module.exports.CreepTasks = {
 };
 
 module.exports.MaxCreeps = {
-    HARVESTER : 4,
-    UPGRADER : 4,
-    BUILDER: 4,
+    HARVESTER : 1,
+    UPGRADER : 1,
+    BUILDER: 1,
     GUARD: 0
 };
 
@@ -37,9 +39,9 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MINWALLHITS : 300000,
-    MINRAMPARTHITS : 200000,
-    MAXREPAIRHITS : 300000
+    MINWALLHITS : 700000,
+    MINRAMPARTHITS : 750000,
+    MAXREPAIRHITS : 700000
 };
 
 module.exports.RoomPositions = {
@@ -54,4 +56,11 @@ module.exports.RoleHarvestSource = {
     BUILDER : 1,
     UPGRADER: 0
 };
+
+module.exports.RoleContainerSource = {
+    TRANSFERER : 0,
+    BUILDER : 0,
+    UPGRADER: 0
+};
+
 

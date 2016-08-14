@@ -4,6 +4,9 @@ var roleBuilder = require('role.builder');
 var roleGuard = require('role.guard');
 var roleTower = require('role.tower');
 var roleSpawn = require('role.spawn');
+var roleHarvester2 = require('role.harvester2');
+var roleTransferer = require('role.transferer');
+
 var helper = require('helper');
 var constants = require('constants');
 
@@ -17,16 +20,23 @@ module.exports.loop = function () {
    
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
+
         if(creep.memory.role == constants.RoleNames.HARVESTER) {
             roleHarvester.run(creep);
         }
-        if(creep.memory.role == constants.RoleNames.UPGRADER) {
+        else if(creep.memory.role == constants.RoleNames.HARVESTER2) {
+            roleHarvester2.run(creep);
+        }
+        else if(creep.memory.role == constants.RoleNames.TRANSFERER) {
+            roleTransferer.run(creep);
+        }
+        else if(creep.memory.role == constants.RoleNames.UPGRADER) {
             roleUpgrader.run(creep);
         }
-        if(creep.memory.role == constants.RoleNames.BUILDER) {
+        else if(creep.memory.role == constants.RoleNames.BUILDER) {
             roleBuilder.run(creep);
         }
-        if(creep.memory.role == constants.RoleNames.GUARD) {
+        else if(creep.memory.role == constants.RoleNames.GUARD) {
             roleGuard.run(creep);
         }
     }
