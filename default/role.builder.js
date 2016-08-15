@@ -23,13 +23,14 @@ var roleBuilder = {
             }
         }
         else if(creep.carry.energy == 0) {
-	        if (creep.memory.task != constants.CreepTasks.HARVEST) {
-                creep.memory.task = constants.CreepTasks.HARVEST 
-                creep.say('harvesting');
+	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
+                creep.memory.task = constants.CreepTasks.WITHDRAW 
+                creep.say('withdrawing');
 	        }
 	    }	
-	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
+	    else if (creep.memory.task == constants.CreepTasks.WITHDRAW) {
 	        if (creep.carry.energy == creep.carryCapacity) {
+	            creep.memory.withdrawSource = null;
 	            creep.memory.task = null;
 	        }
 	        
@@ -95,10 +96,10 @@ var roleBuilder = {
                 creep.moveTo(creep.room.controller);
             }
 	    }
-	    else {
-	     
-            helper.harvestSource(creep, constants.RoleHarvestSource.BUILDER, true);
-	    }
+        else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
+            
+            helper.withdrawEnergyFromContainer(creep, false);
+        }
         
 	}
 };

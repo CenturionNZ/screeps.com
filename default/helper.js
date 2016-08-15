@@ -82,7 +82,7 @@ module.exports.getEmptyEnergyStructures = function(creep) {
 }
 
 module.exports.getEmptyContainers = function(creep) {
-         var energyStructures = creep.pos.findInRange(FIND_STRUCTURES, 5, {
+         var energyStructures = creep.room.find(FIND_STRUCTURES, {
             filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) < object.storeCapacity
         });
         
@@ -191,7 +191,7 @@ module.exports.harvestSource = function(creep, sourceNumber, harvestFromDrops) {
            
 }
 
-module.exports.getEnergyFromContainer = function(creep, containerNumber, harvestFromDrops) {
+module.exports.withdrawEnergyFromContainer = function(creep, harvestFromDrops) {
       
             var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
             
@@ -203,23 +203,16 @@ module.exports.getEnergyFromContainer = function(creep, containerNumber, harvest
 	        else {
                 
             containers = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) > 0
+                filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) >= 50
             });
                 
-                if (creep.memory.harvestSource == null)
+                if (creep.memory.withdrawSource == null)
                 {
-                    if (containerNumber == null) {
-                        containerNumber = module.exports.rand(containers.length);
-                    }
-                    
-                    if (containers.length > containerNumber)
-                    {
-                        creep.memory.harvestSource = containerNumber;
-                    }
+                    creep.memory.withdrawSource  = module.exports.rand(containers.length);
                 }
         
-                if(creep.withdraw(containers[creep.memory.harvestSource], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(containers[creep.memory.harvestSource]);
+                if(creep.withdraw(containers[creep.memory.withdrawSource], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(containers[creep.memory.withdrawSource]);
                 }
 	        }
     

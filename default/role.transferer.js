@@ -23,18 +23,18 @@ var roleTransferer = {
             }
         }
         else if(creep.carry.energy == 0) {
-            if (creep.memory.task != constants.CreepTasks.HARVEST) {
-                creep.memory.task = constants.CreepTasks.HARVEST; 
-                creep.say('harvesting');
+            if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
+                creep.memory.task = constants.CreepTasks.WITHDRAW; 
+                creep.say('withdrawing');
                 
                 console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
             }
 	    }
-	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
+	    else if (creep.memory.task == constants.CreepTasks.WITHDRAW) {
 	        if (creep.carry.energy == creep.carryCapacity) {
+	            creep.memory.withdrawSource = null;
 	            creep.memory.task = null;
 	        }
-	        
 	    }
 	    else if(energyStructures.length > 0 && creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
@@ -128,9 +128,9 @@ var roleTransferer = {
                 creep.moveTo(creep.room.controller);
             }
         }
-        else {
+        else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
-            helper.getEnergyFromContainer(creep, constants.RoleContainerSource.TRANSFERER, false);
+            helper.withdrawEnergyFromContainer(creep, true);
            
         }
 	}

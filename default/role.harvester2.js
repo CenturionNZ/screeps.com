@@ -49,22 +49,22 @@ var roleHarvester2 = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-            var targets = creep.room.find(FIND_STRUCTURES, {
+            var targets = creep.pos.findInRange(FIND_STRUCTURES, 1, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_CONTAINER) &&
                             _.sum(structure.store) < structure.storeCapacity;
                     }
             });
             
-            if (targets.length == 0) {
-                targets = creep.room.find(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
-                                structure.energy < structure.energyCapacity;
-                        }
-                });
+            // if (targets.length == 0) {
+            //     targets = creep.room.find(FIND_STRUCTURES, {
+            //             filter: (structure) => {
+            //                 return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
+            //                     structure.energy < structure.energyCapacity;
+            //             }
+            //     });
              
-            }
+            // }
             
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -75,7 +75,7 @@ var roleHarvester2 = {
         }
         else {
             
-            helper.harvestSource(creep, constants.RoleHarvestSource.HARVESTER, false);
+            helper.harvestSource(creep, constants.RoleContainerSource.HARVESTER, false);
            
         }
 	}

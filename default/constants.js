@@ -25,12 +25,13 @@ module.exports.CreepTasks = {
     HIDE: 'hide',
     ATTACK: 'attack',
     RENEW: 'renew',
+    WITHDRAW : 'withdraw'
 };
 
 module.exports.MaxCreeps = {
-    HARVESTER : 1,
-    UPGRADER : 1,
-    BUILDER: 1,
+    HARVESTER : 0,
+    UPGRADER : 0,
+    BUILDER: 0,
     GUARD: 0
 };
 
@@ -39,9 +40,9 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MINWALLHITS : 700000,
+    MINWALLHITS : 800000,
     MINRAMPARTHITS : 750000,
-    MAXREPAIRHITS : 700000
+    MAXREPAIRHITS : 800000
 };
 
 module.exports.RoomPositions = {
