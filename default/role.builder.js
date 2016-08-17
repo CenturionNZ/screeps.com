@@ -11,6 +11,12 @@ var roleBuilder = {
         var constructionSites = helper.getConstructionsSites(creep);
         
         //ASSIGN TASKS
+        if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.withdrawSourceId = null;
+            creep.memory.task = null;
+	        
+	    }
+        
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -27,13 +33,6 @@ var roleBuilder = {
                 creep.memory.task = constants.CreepTasks.WITHDRAW 
                 creep.say('withdrawing');
 	        }
-	    }	
-	    else if (creep.memory.task == constants.CreepTasks.WITHDRAW) {
-	        if (creep.carry.energy == creep.carryCapacity) {
-	            creep.memory.withdrawSource = null;
-	            creep.memory.task = null;
-	        }
-	        
 	    }
 		else if(constructionSites.length > 0) {
 	        if (creep.memory.task != constants.CreepTasks.BUILD ) {

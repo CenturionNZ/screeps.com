@@ -30,9 +30,11 @@ module.exports.CreepTasks = {
 
 module.exports.MaxCreeps = {
     HARVESTER : 0,
-    UPGRADER : 0,
-    BUILDER: 0,
-    GUARD: 0
+    UPGRADER : 3,
+    BUILDER: 4,
+    GUARD: 0,
+    HARVESTER2 : 2,
+    TRANSFERER : 4
 };
 
 module.exports.RoomNames = {
@@ -40,16 +42,16 @@ module.exports.RoomNames = {
 };
 
 module.exports.RepairValues = {
-    MINWALLHITS : 800000,
-    MINRAMPARTHITS : 750000,
-    MAXREPAIRHITS : 800000
+    MINWALLHITS : 1000000,
+    MINRAMPARTHITS : 800000,
+    MAXREPAIRHITS : 1000000
 };
 
 module.exports.RoomPositions = {
     GUARDPOST1 : new RoomPosition(30,29, module.exports.RoomNames.MAINROOM),
     SOURCE0WAITSPOT : new RoomPosition(32,34, module.exports.RoomNames.MAINROOM),
     SOURCE0HARVESTSPOT: new RoomPosition(34,35, module.exports.RoomNames.MAINROOM),
-    RENEWCREEPSPOT: new RoomPosition(19,33, module.exports.RoomNames.MAINROOM)
+    RENEWCREEPSPOT: new RoomPosition(20,33, module.exports.RoomNames.MAINROOM)
 };
 
 module.exports.RoleHarvestSource = {

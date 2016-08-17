@@ -7,6 +7,12 @@ var roleUpgrader = {
     run: function(creep) {
 
        //ASSIGN TASKS
+        if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.withdrawSourceId = null;
+            creep.memory.task = null;
+	        
+	    }
+	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -23,12 +29,6 @@ var roleUpgrader = {
                 creep.memory.task = constants.CreepTasks.WITHDRAW
                 creep.say('withdrawing');
             }
-	    }
-	    else if (creep.memory.task == constants.CreepTasks.WITHDRAW) {
-	        if (creep.carry.energy == creep.carryCapacity) {
-	            creep.memory.withdrawSource = null;
-	            creep.memory.task = null;
-	        }
 	    }
 	    else if(creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.UPGRADE) {

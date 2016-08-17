@@ -9,6 +9,8 @@ var roleHarvester2 = {
         var emptyContainers = helper.getEmptyContainers(creep);
         
         //ASSIGN TASKS
+        
+	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -24,8 +26,6 @@ var roleHarvester2 = {
             if (creep.memory.task != constants.CreepTasks.HARVEST) {
                 creep.memory.task = constants.CreepTasks.HARVEST; 
                 creep.say('harvesting');
-                
-                console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
             }
 	    }
 	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
@@ -43,8 +43,14 @@ var roleHarvester2 = {
 	    
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+	        
+	       if (creep.energy >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+	           creep.moveTo(20,36);
+	       }
+	       else {
+    	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
+    	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+    	       }
 	       }
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
@@ -56,15 +62,14 @@ var roleHarvester2 = {
                     }
             });
             
-            // if (targets.length == 0) {
-            //     targets = creep.room.find(FIND_STRUCTURES, {
-            //             filter: (structure) => {
-            //                 return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
-            //                     structure.energy < structure.energyCapacity;
-            //             }
-            //     });
-             
-            // }
+            if (targets.length == 0) {
+               var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_CONTAINER) &&
+                        _.sum(structure.store) < structure.storeCapacity;
+                }
+            });
+            }
             
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -73,7 +78,7 @@ var roleHarvester2 = {
             }
         
         }
-        else {
+        else if(creep.memory.task == constants.CreepTasks.HARVEST) {
             
             helper.harvestSource(creep, constants.RoleContainerSource.HARVESTER, false);
            

@@ -11,6 +11,12 @@ var roleTransferer = {
         var constructionSites = helper.getConstructionsSites(creep);
         
         //ASSIGN TASKS
+      if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.withdrawSourceId = null;
+            creep.memory.task = null;
+	        
+	    }
+	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -27,14 +33,7 @@ var roleTransferer = {
                 creep.memory.task = constants.CreepTasks.WITHDRAW; 
                 creep.say('withdrawing');
                 
-                console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
             }
-	    }
-	    else if (creep.memory.task == constants.CreepTasks.WITHDRAW) {
-	        if (creep.carry.energy == creep.carryCapacity) {
-	            creep.memory.withdrawSource = null;
-	            creep.memory.task = null;
-	        }
 	    }
 	    else if(energyStructures.length > 0 && creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
@@ -90,6 +89,10 @@ var roleTransferer = {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0]);
                 }
+                else {
+    	        
+                    console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
+                }
             }
         
         }
@@ -130,7 +133,7 @@ var roleTransferer = {
         }
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
-            helper.withdrawEnergyFromContainer(creep, true);
+            helper.withdrawEnergyFromContainer(creep, false);
            
         }
 	}

@@ -39,7 +39,11 @@ module.exports.loop = function () {
         else if(creep.memory.role == constants.RoleNames.GUARD) {
             roleGuard.run(creep);
         }
+        
     }
+    
+        
+        
     
     var towers = helper.getTowers();
     

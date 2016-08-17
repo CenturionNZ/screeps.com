@@ -114,7 +114,7 @@ module.exports.getStructuresToRepair = function(creep) {
     //get everything else   
     if (repairStructures.length == 0) {
           repairStructures = creep.room.find(FIND_STRUCTURES, {
-            filter: object => object.hits  < (object.hitsMax / 3) && object.hits <  constants.RepairValues.MAXREPAIRHITS
+            filter: object => object.hits  < (object.hitsMax / 3) && object.hitsMax <  constants.RepairValues.MAXREPAIRHITS
         });
     } 
     
@@ -165,28 +165,32 @@ module.exports.harvestSource = function(creep, sourceNumber, harvestFromDrops) {
                         creep.memory.harvestSource = sourceNumber;
                     }
                 }
-                
-                if (creep.memory.harvestSource == 0){
-                    creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS, constants.RoomPositions.SOURCE0HARVESTSPOT);
+    
+                if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[creep.memory.harvestSource]);
+                }
+    
+                // if (creep.memory.harvestSource == 0){
+                //     creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS, constants.RoomPositions.SOURCE0HARVESTSPOT);
                     
                       
-                    //If a harvester is already harvesting form source, move to waiting spot
-                    if (creep.pos != constants.RoomPositions.SOURCE0HARVESTSPOT && creepsAtSourceSpot.length > 0 && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
-                        creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
-                    }
-                    else {
+                //     //If a harvester is already harvesting form source, move to waiting spot
+                //     if (creep.pos != constants.RoomPositions.SOURCE0HARVESTSPOT && creepsAtSourceSpot.length > 0 && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
+                //         creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
+                //     }
+                //     else {
                     
-                        if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(sources[creep.memory.harvestSource]);
-                        }
-                    }
+                //         if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                //             creep.moveTo(sources[creep.memory.harvestSource]);
+                //         }
+                //     }
                 
-                }
-                else {
-                         if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(sources[creep.memory.harvestSource]);
-                        }
-                }
+                // }
+                // else {
+                //          if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                //             creep.moveTo(sources[creep.memory.harvestSource]);
+                //         }
+                // }
 	        }
            
 }
@@ -206,14 +210,27 @@ module.exports.withdrawEnergyFromContainer = function(creep, harvestFromDrops) {
                 filter: object => object.structureType == STRUCTURE_CONTAINER && _.sum(object.store) >= 50
             });
                 
-                if (creep.memory.withdrawSource == null)
+                if (creep.memory.withdrawSourceId == null)
                 {
-                    creep.memory.withdrawSource  = module.exports.rand(containers.length);
+                    var source  = module.exports.rand(containers.length);
+                    var container = containers[source];
+                    
+                    if (container != null) {
+                        creep.memory.withdrawSourceId = containers[source].id;
+                    }
                 }
+                var object = Game.getObjectById(creep.memory.withdrawSourceId);
+                if (object != null && _.sum(object.store) > 0)
+    	        {
+    	             if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(object);
+    	            }
+    	        }
+    	        else {
+    	           creep.memory.withdrawSourceId  = null;
+    	        }
         
-                if(creep.withdraw(containers[creep.memory.withdrawSource], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(containers[creep.memory.withdrawSource]);
-                }
+               
 	        }
     
 }

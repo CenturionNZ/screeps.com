@@ -11,6 +11,11 @@ var roleHarvester = {
         var constructionSites = helper.getConstructionsSites(creep);
         
         //ASSIGN TASKS
+        
+        if (creep.memory.task == constants.CreepTasks.HARVEST && creep.carry.energy == creep.carryCapacity) {
+	        creep.memory.task = null;
+	    }
+        
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -29,12 +34,6 @@ var roleHarvester = {
                 
                 console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
             }
-	    }
-	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
-	        if (creep.carry.energy == creep.carryCapacity) {
-	            creep.memory.task = null;
-	        }
-	        
 	    }
 	    else if(energyStructures.length > 0 && creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
