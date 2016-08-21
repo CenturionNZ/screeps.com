@@ -1,7 +1,7 @@
 var helper = require('helper');
 var constants = require('constants');
 
-var roleHarvester2 = {
+var roleHarvester3 = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -55,20 +55,21 @@ var roleHarvester2 = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-            var targets = helper.getEmptyContainers(creep);
-            
-            if (targets.length == 0) {
-               var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER) &&
-                        _.sum(structure.store) < structure.storeCapacity;
+            if (creep.memory.transferContainerId == null){
+                if (creep.memory.harvestSource == 1) {
+                    creep.memory.transferContainerId = '57b41827a8d0e1d76bf79507';
                 }
-            });
+                else 
+                if (creep.memory.harvestSource == 0) {
+                    creep.memory.transferContainerId = '57b44a96eead0db92ed6d3aa';
+                }
             }
             
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+            var object = Game.getObjectById(creep.memory.transferContainerId)
+            
+                if (object != null) {
+                    if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(object);
                 }
             }
         
@@ -81,4 +82,4 @@ var roleHarvester2 = {
 	}
 };
 
-module.exports = roleHarvester2;
+module.exports = roleHarvester3;

@@ -1,13 +1,13 @@
 var helper = require('helper');
 var constants = require('constants');
 
-var roleUpgrader = {
+var roleLinkTransferer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-
-       //ASSIGN TASKS
-        if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
+        
+      //ASSIGN TASKS
+      if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
             creep.memory.withdrawSourceId = null;
             creep.memory.task = null;
 	        
@@ -26,34 +26,45 @@ var roleUpgrader = {
         }
         else if(creep.carry.energy == 0) {
             if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
-                creep.memory.task = constants.CreepTasks.WITHDRAW
+                creep.memory.task = constants.CreepTasks.WITHDRAW; 
                 creep.say('withdrawing');
+                
             }
 	    }
 	    else if(creep.carry.energy > 0) {
-	        if (creep.memory.task != constants.CreepTasks.UPGRADE) {
-    	        creep.memory.task = constants.CreepTasks.UPGRADE
-    	        creep.say('upgrading');
+	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
+    	        creep.memory.task = constants.CreepTasks.TRANSFER 
+    	        creep.say('transfering');
 	        }
 	    }
-	    
-	    
+	   
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
 	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
 	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
 	       }
 	    }
-        else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+        else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
+            
+           var object = Game.getObjectById(constants.ObjectIds.STORAGE)
+            
+                if (object != null) {
+                    if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(object);
+                }
             }
+        
         }
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
-            helper.withdrawEnergy(creep, false);
+              
+           var object = Game.getObjectById(constants.ObjectIds.RECEIVINGLINK)
+          	     if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(object);
+                }
+           
         }
 	}
 };
 
-module.exports = roleUpgrader;
+module.exports = roleLinkTransferer;

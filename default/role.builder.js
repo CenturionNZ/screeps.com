@@ -97,7 +97,7 @@ var roleBuilder = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
-            helper.withdrawEnergyFromContainer(creep, false);
+            helper.withdrawEnergy(creep, false);
         }
         
 	}

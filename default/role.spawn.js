@@ -16,17 +16,19 @@ var roleSpawn = {
             }
         } 
         else {
-            if (helper.getCreepsRoleCount(constants.RoleNames.HARVESTER) < constants.MaxCreeps.HARVESTER)
+            if (helper.getCreepsRoleCount(constants.RoleNames.HARVESTER3) < constants.MaxCreeps.HARVESTER3)
             {
-                 helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER, constants.MaxCreeps.HARVESTER, true, true);
+                 helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER3, constants.MaxCreeps.HARVESTER3);
             }
             else
             {
-                helper.spawnCreeps(spawn, constants.RoleNames.UPGRADER, constants.MaxCreeps.UPGRADER, true, true);
+                helper.spawnCreeps(spawn, constants.RoleNames.UPGRADER, constants.MaxCreeps.UPGRADER);
                 
-                helper.spawnCreeps(spawn, constants.RoleNames.BUILDER, constants.MaxCreeps.BUILDER, true, true);
+                helper.spawnCreeps(spawn, constants.RoleNames.BUILDER, constants.MaxCreeps.BUILDER);
                 
-                helper.spawnAttackCreeps(spawn, constants.RoleNames.GUARD, constants.MaxCreeps.GUARD);
+                helper.spawnCreeps(spawn, constants.RoleNames.LINKTRANSFERER, constants.MaxCreeps.LINKTRANSFERER);
+                
+                //helper.spawnCreeps(spawn, constants.RoleNames.CLAIMER, constants.MaxCreeps.CLAIMER);
             }
         }
          
