@@ -1,7 +1,7 @@
 var helper = require('helper');
 var constants = require('constants');
 
-var roleTransferer = {
+var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -11,12 +11,8 @@ var roleTransferer = {
         var constructionSites = helper.getConstructionsSites(creep);
         
         //ASSIGN TASKS
-      if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.withdrawSourceId = null;
-            creep.memory.task = null;
-	        
-	    }
-	    
+        
+
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
                 creep.memory.task = null;
@@ -29,13 +25,18 @@ var roleTransferer = {
             }
         }
         else if(creep.carry.energy == 0) {
-            if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
-                creep.memory.task = constants.CreepTasks.WITHDRAW; 
-                creep.say('withdrawing');
-                
+            if (creep.memory.task != constants.CreepTasks.HARVEST) {
+                creep.memory.task = constants.CreepTasks.HARVEST; 
+                creep.say('harvesting');
             }
 	    }
-	    else if(energyStructures.length > 0 && creep.carry.energy > 0) {
+	    else         if (creep.memory.task == constants.CreepTasks.HARVEST){
+	        if (creep.carry.energy == creep.carryCapacity) {
+	        creep.memory.task = null;
+	        }
+	    }
+        
+	    else if(energyStructures.length > 0 && creep.carry.energy ==  creep.carryCapacity) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
     	        creep.memory.task = constants.CreepTasks.TRANSFER 
     	        creep.say('transfering');
@@ -46,13 +47,13 @@ var roleTransferer = {
     	        creep.memory.task = constants.CreepTasks.BUILD 
     	        creep.say('building');
 	        }
-	    }
-		else if(repairStructures.length > 0 && creep.carry.energy > 0) {
+	    }	
+		else if(repairStructures.length > 0) {
             if (creep.memory.task != constants.CreepTasks.REPAIR) {
     	        creep.memory.task = constants.CreepTasks.REPAIR 
 				creep.say('repairing');
             }
-	    }	
+	    }
 	    else if(creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.UPGRADE) {
     	        creep.memory.task = constants.CreepTasks.UPGRADE
@@ -88,10 +89,6 @@ var roleTransferer = {
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0]);
-                }
-                else {
-    	        
-                    console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
                 }
             }
         
@@ -131,12 +128,12 @@ var roleTransferer = {
                 creep.moveTo(creep.room.controller);
             }
         }
-        else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
+        else {
             
-            helper.withdrawEnergy(creep, false);
+            helper.harvestSource(creep, constants.RoleHarvestSource.HARVESTER, false);
            
         }
 	}
 };
 
-module.exports = roleTransferer;
+module.exports = roleHarvester;

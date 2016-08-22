@@ -31,12 +31,9 @@ module.exports.spawnCreeps = function(spawn, roleName, max) {
 	    
 	    if (creepCount < max) {
 	        
-	        if (roleName == constants.RoleNames.HARVESTER) {
-	                    if (spawn.canCreateCreep([WORK,MOVE,CARRY]) == 0) {
-                            var newName = 	spawn.createCreep( [WORK,WORK,MOVE,CARRY], undefined, { role: roleName} );
-	                    }
-	        }
-	        else if (roleName == constants.RoleNames.HARVESTER3) {
+            console.log('Spawning new  ' + roleName + ':' + newName);
+	        
+	        if (roleName == constants.RoleNames.HARVESTER3) {
 	                    if (spawn.canCreateCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE]) == 0) {
                             var newName = 	spawn.createCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], undefined, { role: roleName} );
 	                    }
@@ -56,10 +53,6 @@ module.exports.spawnCreeps = function(spawn, roleName, max) {
                         var newName = spawn.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName});
                 }
             }
-	        
-	        if (newName) {
-                console.log('Spawning new  ' + roleName + ':' + newName);
-	        }
 	    }
 	}	
 	
@@ -119,37 +112,31 @@ module.exports.getNearbyEmptyStorage = function(creep) {
         return energyStructures;
 }
 
-module.exports.getStructuresToRepair = function(creep, roomId) {
-    
-    var room = creep.room;
-    
-    if (roomId) {
-        room = Game.rooms[roomId];
-    }
+module.exports.getStructuresToRepair = function(creep) {
     
     //get roads
-     var repairStructures = room.find(FIND_STRUCTURES, {
+     var repairStructures = creep.room.find(FIND_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_ROAD && object.hits  < (object.hitsMax / 3)
             });
 
     
     //get ramparts
     if (repairStructures.length == 0) {
-          repairStructures = room.find(FIND_MY_STRUCTURES, {
+          repairStructures = creep.room.find(FIND_MY_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues.MINRAMPARTHITS
             });
     }
     
     //get walls    
     if (repairStructures.length == 0) {
-         repairStructures = room.find(FIND_STRUCTURES, {
+         repairStructures = creep.room.find(FIND_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_WALL && object.hits  < constants.RepairValues.MINWALLHITS
             });
     }
     
     //get everything else   
     if (repairStructures.length == 0) {
-          repairStructures = room.find(FIND_STRUCTURES, {
+          repairStructures = creep.room.find(FIND_STRUCTURES, {
             filter: object => object.hits  < (object.hitsMax / 3) && object.hitsMax <  constants.RepairValues.MAXREPAIRHITS
         });
     } 
@@ -161,7 +148,7 @@ module.exports.getConstructionsSites = function(creep, roomId) {
     
     
     if (roomId == null) {
-        var room = Game.rooms['E49N54'];
+        var room = creep.room;
     }
     else {
         var room = Game.rooms[roomId];
@@ -170,28 +157,8 @@ module.exports.getConstructionsSites = function(creep, roomId) {
     
     var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
     
-    if (constructionSites.length == 0) {
-        for (var roomName in Game.rooms){
-        
-            var room2 = Game.rooms[roomName];
-            
-            if (room2.name != room.name) {
-                var sites = room2.find(FIND_CONSTRUCTION_SITES);
-            
-                if (sites.length > 0) {
-                    constructionSites = sites;
-                    break;
-                }
-            }
-           
-        }
-    
-    }
-   
-    // var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-    
     // if (constructionSites.length == 0) {
-    //     constructionSites = Game.rooms[constants.RoomNames.MAINROOM].find(FIND_CONSTRUCTION_SITES);
+    //     constructionSites = Game.rooms[constants.RoomNames.SECONDROOM].find(FIND_CONSTRUCTION_SITES);
     // }
     
     return constructionSites;
@@ -220,22 +187,16 @@ module.exports.harvestSource = function(creep, sourceNumber, harvestFromDrops) {
                 }
 	        }
 	        else {
-	            
-	            if (creep.memory.harvestSourceId == null ) {
-	                  
-                    var sources = creep.room.find(FIND_SOURCES);
-                    
-                    if (creep.memory.harvestSource == null)
-                    {
-                      creep.memory.harvestSourceId = sources[1].id;
-                    }
-	            }
-	            
-	            var sourceObject = Game.getObjectById(creep.memory.harvestSourceId)
-              
+                
+                var sources = creep.room.find(FIND_SOURCES);
+                
+                if (creep.memory.harvestSource == null)
+                {
+                  creep.memory.harvestSource = 1;
+                }
     
-                if(creep.harvest(sourceObject) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceObject);
+                if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[creep.memory.harvestSource]);
                 }
     
                 // if (creep.memory.harvestSource == 0){
@@ -280,7 +241,7 @@ module.exports.withdrawEnergyFromContainer = function(creep, harvestFromDrops) {
                 
                 if (creep.memory.withdrawSourceId == null)
                 {
-                    creep.memory.withdrawSourceId  = '57b05cf91300d2aa60b56a7f';
+                    creep.memory.withdrawSourceId  = creep.room.storage.id;
                     var test = Game.getObjectById(creep.memory.withdrawSourceId);
                     
                     if (test != null && _.sum(test.store) == 0)
@@ -321,7 +282,7 @@ module.exports.withdrawEnergy = function(creep, harvestFromDrops) {
 	        }
 	        else {
 	            
-	           var object = Game.getObjectById(constants.ObjectIds.STORAGE)
+	           var object = creep.room.storage;
                 
     		if (object != null) {
             		 if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -340,17 +301,5 @@ module.exports.compareRoomPos = function(pos1, pos2) {
         return false;
     }
     
-}
-
-module.exports.doIOwnRoom = function(roomName) {
-    var ownRoom = false;
-     for (var name in Game.rooms){
-         if (name == roomName && Game.rooms[name].controller && Game.rooms[name].controller.owner && Game.rooms[name].controller.owner.username == 'CenturionNZ') {
-             ownRoom = true;
-             break;
-         }
-     }
-     
-     return ownRoom;
 }
             

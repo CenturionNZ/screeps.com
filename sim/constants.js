@@ -12,7 +12,7 @@ module.exports.ObjectIds = {
 
 module.exports.Ticks = {
     CREEPMAXTICKSTOLIVE : 1000,
-    CREEPMINTICKSTOLIVE : 150
+    CREEPMINTICKSTOLIVE : 300
 };
 
 module.exports.RoleNames = {
@@ -42,36 +42,36 @@ module.exports.CreepTasks = {
 };
 
 module.exports.MaxCreeps = {
-    HARVESTER : 3,
-    UPGRADER : 2,
-    BUILDER: 4,
+    HARVESTER : 0,
+    UPGRADER : 0,
+    BUILDER: 0,
     GUARD: 0,
-    HARVESTER3 : 2,
-    TRANSFERER : 4,
+    HARVESTER3 : 1,
+    TRANSFERER : 2,
     CLAIMER : 0,
-    LINKTRANSFERER: 1
+    LINKTRANSFERER: 0
 };
 
 module.exports.RoomNames = {
-    MAINROOM : 'E49N54',
-    ATTACKROOM : 'E48N54',
-    SECONDROOM : 'E48N54'
+    MAINROOM : 'sim',
+    ATTACKROOM : 'sim',
+    SECONDROOM : 'sim'
 };
 
 module.exports.RepairValues = {
-    MINWALLHITS : 10000,
+    MINWALLHITS : 1100000,
     MINRAMPARTHITS : 900000,
-    MAXREPAIRHITS : 10000
+    MAXREPAIRHITS : 1100000
 };
 
 module.exports.RoomPositions = {
     GUARDPOST1 : new RoomPosition(3,44, module.exports.RoomNames.MAINROOM),
     SOURCE0WAITSPOT : new RoomPosition(32,34, module.exports.RoomNames.MAINROOM),
     SOURCE0HARVESTSPOT: new RoomPosition(34,35, module.exports.RoomNames.MAINROOM),
-    RENEWCREEPSPOT: new RoomPosition(20,33, module.exports.RoomNames.MAINROOM),
+    RENEWCREEPSPOT: new RoomPosition(25,35, module.exports.RoomNames.MAINROOM),
     LINKTRANSFERERSPOT: new RoomPosition(20,37, module.exports.RoomNames.MAINROOM),
     ATTACKROOMSPOT: new RoomPosition(36,33, module.exports.RoomNames.ATTACKROOM),
-    CHECKROOMSPOT: new RoomPosition(48,44, module.exports.RoomNames.ATTACKROOM)
+    CHECKROOMSPOT: new RoomPosition(17,43, module.exports.RoomNames.MAINROOM)
 };
 
 module.exports.RoleHarvestSource = {

@@ -8,7 +8,7 @@ var roleClaimer = {
     run: function(creep) {
         
  	  
-        if (creep.memory.task == null) {
+        if (creep.memory.task != constants.CreepTasks.CHECKROOM) {
             creep.say('checking room');
             creep.memory.task = constants.CreepTasks.CHECKROOM;
              
@@ -28,15 +28,14 @@ var roleClaimer = {
         
         //ACTION TASKS    
 	    if(creep.memory.task == constants.CreepTasks.CHECKROOM) {
-	          if (!helper.compareRoomPos(creep.pos,constants.RoomPositions.CHECKROOMSPOT)) {
+	          if (creep.pos != constants.RoomNames.CHECKROOMSPOT) {
                       creep.moveTo(constants.RoomPositions.CHECKROOMSPOT);
               }
 	    }
-	    else if(creep.memory.task == constants.CreepTasks.CLAIM && helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
+	    else if(creep.memory.task == constants.CreepTasks.CLAIM) {
 	        
-	          if (!creep.memory.reachedAttackSpot == true && !helper.compareRoomPos(creep.pos,constants.RoomPositions.ATTACKROOMSPOT)) {
+	          if ( helper.compareRoomPos(creep.pos,constants.RoomNames.ATTACKROOMSPOT)) {
                       creep.moveTo(constants.RoomPositions.ATTACKROOMSPOT);
-                      creep.memory.reachedAttackSpot = true;
               }
               else {
                 var  roomController = Game.rooms[constants.RoomNames.ATTACKROOM].find(FIND_STRUCTURES, {

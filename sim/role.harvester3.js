@@ -63,9 +63,6 @@ var roleHarvester3 = {
                 if (creep.memory.harvestSource == 0) {
                     creep.memory.transferContainerId = '57b44a96eead0db92ed6d3aa';
                 }
-                else {
-                    creep.memory.transferContainerId = '57b41827a8d0e1d76bf79507';
-                }
             }
             
             var object = Game.getObjectById(creep.memory.transferContainerId)

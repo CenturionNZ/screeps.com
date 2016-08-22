@@ -19,12 +19,15 @@ module.exports.loop = function () {
     
     helper.clearMemory();
     
+   //console.log(helper.doIOwnRoom(constants.RoomNames.SECONDROOM))
+    
     roleSpawn.run(Game.spawns[constants.SpawnNames.MAINSPAWN])
     
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
+        
    
-        // if (name == 'Gabriella') {
+        // if (name == 'Alaina ') {
         //     creep.moveTo(47,44 );
         // }
         // else {
@@ -69,5 +72,39 @@ module.exports.loop = function () {
     if (sendingLink.cooldown == 0 && sendingLink.energy >= 50 && receivingLink.energy < receivingLink.energyCapacity) {
         sendingLink.transferEnergy(receivingLink);
     }
+    
+    
+    if (helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
+        
+        var room = Game.rooms[constants.RoomNames.SECONDROOM];
+        
+                // room.createConstructionSite(48, 44, STRUCTURE_ROAD);
+                // room.createConstructionSite(47, 43, STRUCTURE_ROAD);
+                // room.createConstructionSite(46, 42, STRUCTURE_ROAD);
+                // room.createConstructionSite(45, 41, STRUCTURE_ROAD);
+                // room.createConstructionSite(44, 40, STRUCTURE_ROAD);
+                // room.createConstructionSite(43, 39, STRUCTURE_ROAD);
+                // room.createConstructionSite(43, 38, STRUCTURE_ROAD);
+                // room.createConstructionSite(42, 37, STRUCTURE_ROAD);
+                // room.createConstructionSite(41, 36, STRUCTURE_ROAD);
+                // room.createConstructionSite(40, 36, STRUCTURE_ROAD);
+                // room.createConstructionSite(39, 36, STRUCTURE_ROAD);
+                // room.createConstructionSite(38, 36, STRUCTURE_ROAD);
+                // room.createConstructionSite(37, 36, STRUCTURE_ROAD);
+                // room.createConstructionSite(36, 35, STRUCTURE_ROAD);
+                // room.createConstructionSite(35, 34, STRUCTURE_ROAD);
+                // room.createConstructionSite(34, 33, STRUCTURE_ROAD);
+                // room.createConstructionSite(33, 33, STRUCTURE_ROAD);
+                // room.createConstructionSite(32, 33, STRUCTURE_ROAD);
+                // room.createConstructionSite(31, 33, STRUCTURE_ROAD);
+                // room.createConstructionSite(30, 33, STRUCTURE_ROAD);
+                // room.createConstructionSite(29, 34, STRUCTURE_ROAD);
+    
+ 
+            
+        
+    }
+    
+    
  
 }

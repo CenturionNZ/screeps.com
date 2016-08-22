@@ -46,13 +46,13 @@ var roleTransferer = {
     	        creep.memory.task = constants.CreepTasks.BUILD 
     	        creep.say('building');
 	        }
-	    }
-		else if(repairStructures.length > 0 && creep.carry.energy > 0) {
+	    }	
+		else if(repairStructures.length > 0) {
             if (creep.memory.task != constants.CreepTasks.REPAIR) {
     	        creep.memory.task = constants.CreepTasks.REPAIR 
 				creep.say('repairing');
             }
-	    }	
+	    }
 	    else if(creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.UPGRADE) {
     	        creep.memory.task = constants.CreepTasks.UPGRADE
