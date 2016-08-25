@@ -6,9 +6,14 @@ var roleTransferer = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
+        
+        creep.memory.baseRoom = constants.RoomNames.MAINROOM;
+        
+                
+        
         var energyStructures = helper.getEmptyEnergyStructures(creep);
-        var repairStructures = helper.getStructuresToRepair(creep);
-        var constructionSites = helper.getConstructionsSites(creep);
+       var repairStructures = helper.getStructuresToRepair(creep, creep.memory.baseRoom);
+        var constructionSites = helper.getConstructionsSites(creep, creep.memory.baseRoom);
         
         //ASSIGN TASKS
       if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
@@ -114,7 +119,7 @@ var roleTransferer = {
 	        var object = Game.getObjectById(creep.memory.repairStructureId)
 	        
 	        //Repair strucuture to half way
-	        if (object != null && object.hits < constants.RepairValues.MAXREPAIRHITS && object.hits <  object.hitsMax)
+	        if (object != null && object.hits < constants.RepairValues[creep.memory.baseRoom].MAXREPAIRHITS && object.hits <  object.hitsMax)
 	        {
 	             if(creep.repair(object) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(object);

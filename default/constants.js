@@ -1,5 +1,6 @@
 module.exports.SpawnNames = {
-    MAINSPAWN : 'Spawn1'
+    MAINSPAWN : 'Spawn1',
+    SECONDSPAWN : 'Spawn2'
 };
 
 
@@ -38,40 +39,64 @@ module.exports.CreepTasks = {
     RENEW: 'renew',
     WITHDRAW : 'withdraw',
     CLAIM : 'claim',
+    RESERVE : 'reserve',
     CHECKROOM : 'checkroom'
 };
 
 module.exports.MaxCreeps = {
-    HARVESTER : 3,
-    UPGRADER : 2,
-    BUILDER: 4,
-    GUARD: 0,
-    HARVESTER3 : 2,
-    TRANSFERER : 4,
-    CLAIMER : 0,
-    LINKTRANSFERER: 1
+    E49N54 : {
+        HARVESTER : 4,
+        UPGRADER : 3,
+        BUILDER: 7,
+        GUARD: 0,
+        HARVESTER3 : 2,
+        TRANSFERER : 4,
+        CLAIMER : 0,
+        LINKTRANSFERER: 1,
+        ATTACKER: 0
+    },
+    E48N54 : {
+        HARVESTER : 4,
+        UPGRADER : 3,
+        BUILDER: 7,
+        GUARD: 0,
+        HARVESTER3 : 2,
+        TRANSFERER : 4,
+        CLAIMER : 0,
+        LINKTRANSFERER: 1,
+        ATTACKER: 0
+    }
 };
 
 module.exports.RoomNames = {
     MAINROOM : 'E49N54',
-    ATTACKROOM : 'E48N54',
+    ATTACKROOM : 'E47N54',
     SECONDROOM : 'E48N54'
 };
 
+
 module.exports.RepairValues = {
-    MINWALLHITS : 10000,
-    MINRAMPARTHITS : 900000,
-    MAXREPAIRHITS : 10000
+    E49N54 : {
+        MINWALLHITS : 1500000,
+        MINRAMPARTHITS : 1000000,
+        MAXREPAIRHITS : 1500000
+    },
+    E48N54 : {
+        MINWALLHITS : 200000,
+        MINRAMPARTHITS : 150000,
+        MAXREPAIRHITS : 200000
+    }
 };
 
 module.exports.RoomPositions = {
-    GUARDPOST1 : new RoomPosition(3,44, module.exports.RoomNames.MAINROOM),
+    GUARDPOST1 : new RoomPosition(6,24, module.exports.RoomNames.SECONDROOM),
     SOURCE0WAITSPOT : new RoomPosition(32,34, module.exports.RoomNames.MAINROOM),
     SOURCE0HARVESTSPOT: new RoomPosition(34,35, module.exports.RoomNames.MAINROOM),
     RENEWCREEPSPOT: new RoomPosition(20,33, module.exports.RoomNames.MAINROOM),
+    RENEWCREEPSPOT2: new RoomPosition(22,34, module.exports.RoomNames.SECONDROOM),
     LINKTRANSFERERSPOT: new RoomPosition(20,37, module.exports.RoomNames.MAINROOM),
     ATTACKROOMSPOT: new RoomPosition(36,33, module.exports.RoomNames.ATTACKROOM),
-    CHECKROOMSPOT: new RoomPosition(48,44, module.exports.RoomNames.ATTACKROOM)
+    CHECKROOMSPOT: new RoomPosition(47,36, module.exports.RoomNames.ATTACKROOM)
 };
 
 module.exports.RoleHarvestSource = {

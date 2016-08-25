@@ -18,7 +18,7 @@ module.exports.rand = function(max) {
       return ran_number
 	}
 	
-module.exports.getCreepsRoleCount = function(roleName) {
+module.exports.getCreepsRoleCount = function(roleName, roomName) {
     var creeps = _.filter(Game.creeps, (creep) => creep.memory.role == roleName);
     
     return creeps.length;
@@ -27,18 +27,18 @@ module.exports.getCreepsRoleCount = function(roleName) {
 	
 module.exports.spawnCreeps = function(spawn, roleName, max) {
 	    
-	    var creepCount = this.getCreepsRoleCount(roleName) ;
+	    var creepCount = this.getCreepsRoleCount(roleName, spawn.pos.roomName) ;
 	    
 	    if (creepCount < max) {
 	        
 	        if (roleName == constants.RoleNames.HARVESTER) {
-	                    if (spawn.canCreateCreep([WORK,MOVE,CARRY]) == 0) {
-                            var newName = 	spawn.createCreep( [WORK,WORK,MOVE,CARRY], undefined, { role: roleName} );
+	                    if (spawn.canCreateCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]) == 0) {
+                            var newName = 	spawn.createCreep( [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, { role: roleName, baseRoom: spawn.pos.roomName} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.HARVESTER3) {
 	                    if (spawn.canCreateCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], undefined, { role: roleName} );
+                            var newName = 	spawn.createCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], undefined, { role: roleName, baseRoom: spawn.pos.roomName} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.CLAIMER) {
@@ -48,12 +48,12 @@ module.exports.spawnCreeps = function(spawn, roleName, max) {
 	        }
 	        else if (roleName == constants.RoleNames.LINKTRANSFERER) {
 	                    if (spawn.canCreateCreep([CARRY,CARRY,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [CARRY,CARRY,MOVE], undefined, { role: roleName } );
+                            var newName = 	spawn.createCreep( [CARRY,CARRY,MOVE], undefined, { role: roleName , baseRoom: spawn.pos.roomName} );
 	                    }
 	        }
             else {
                     if (spawn.canCreateCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]) == 0) {
-                        var newName = spawn.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName});
+                        var newName = spawn.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName, baseRoom: spawn.pos.roomName});
                 }
             }
 	        
@@ -77,30 +77,21 @@ module.exports.spawnCreeps = function(spawn, roleName, max) {
 	
 	
 
-module.exports.healTowers = function() {
 
-  var tower = Game.getObjectById('943233ea25da0a3d99dae0a1');
-    if (tower) {
-        
-        var closestDamagedStruc = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax});
-        
-        if (closestDamagedStruc) {
-            tower.repair(closestDamagedStruc);
-        }
-        
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
+
+module.exports.getEmptyEnergyStructures = function(creep, roomName) {
+    
+     var room = creep.room;
+    
+    if (roomName) {
+        room = Game.rooms[roomName];
     }
-}	
-
-module.exports.getEmptyEnergyStructures = function(creep) {
-         var energyStructures = creep.room.find(FIND_STRUCTURES, {
-            filter: object => (object.structureType == STRUCTURE_SPAWN ||  object.structureType == STRUCTURE_EXTENSION) && object.energy < (object.energyCapacity)
-        });
-        
-        return energyStructures;
+    
+     var energyStructures = creep.room.find(FIND_STRUCTURES, {
+        filter: object => (object.structureType == STRUCTURE_SPAWN ||  object.structureType == STRUCTURE_EXTENSION ||  object.structureType == STRUCTURE_TOWER) && object.energy < (object.energyCapacity)
+    });
+    
+    return energyStructures;
 }
 
 module.exports.getEmptyContainers = function(creep) {
@@ -136,21 +127,21 @@ module.exports.getStructuresToRepair = function(creep, roomId) {
     //get ramparts
     if (repairStructures.length == 0) {
           repairStructures = room.find(FIND_MY_STRUCTURES, {
-                filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues.MINRAMPARTHITS
+                filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues[room.name].MINRAMPARTHITS
             });
     }
     
     //get walls    
     if (repairStructures.length == 0) {
          repairStructures = room.find(FIND_STRUCTURES, {
-                filter: object => object.structureType == STRUCTURE_WALL && object.hits  < constants.RepairValues.MINWALLHITS
+                filter: object => object.structureType == STRUCTURE_WALL && object.hits  < constants.RepairValues[room.name].MINWALLHITS
             });
     }
     
     //get everything else   
     if (repairStructures.length == 0) {
           repairStructures = room.find(FIND_STRUCTURES, {
-            filter: object => object.hits  < (object.hitsMax / 3) && object.hitsMax <  constants.RepairValues.MAXREPAIRHITS
+            filter: object => object.hits  < (object.hitsMax / 3) && object.hitsMax <  constants.RepairValues[room.name].MAXREPAIRHITS
         });
     } 
     
@@ -170,23 +161,23 @@ module.exports.getConstructionsSites = function(creep, roomId) {
     
     var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
     
-    if (constructionSites.length == 0) {
-        for (var roomName in Game.rooms){
+    // if (constructionSites.length == 0) {
+    //     for (var roomName in Game.rooms){
         
-            var room2 = Game.rooms[roomName];
+    //         var room2 = Game.rooms[roomName];
             
-            if (room2.name != room.name) {
-                var sites = room2.find(FIND_CONSTRUCTION_SITES);
+    //         if (room2.name != room.name) {
+    //             var sites = room2.find(FIND_CONSTRUCTION_SITES);
             
-                if (sites.length > 0) {
-                    constructionSites = sites;
-                    break;
-                }
-            }
+    //             if (sites.length > 0) {
+    //                 constructionSites = sites;
+    //                 break;
+    //             }
+    //         }
            
-        }
+    //     }
     
-    }
+    // }
    
     // var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
     
@@ -203,63 +194,46 @@ module.exports.getEnemyTargetsInRange = function(creep) {
     return targets;
 }
 
-module.exports.getTowers = function() {
-    var towers = Game.rooms[constants.RoomNames.MAINROOM].find(
+module.exports.getTowers = function(roomName) {
+    var towers = Game.rooms[roomName].find(
             FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
         
         return towers;
 }
 
-module.exports.harvestSource = function(creep, sourceNumber, harvestFromDrops) {
+module.exports.renewCreep = function(creep) {
+    
+    if (creep.memory.baseRoom == constants.RoomNames.MAINROOM) {
+	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
+	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
+	       }
+    }
+    else if (creep.memory.baseRoom == constants.RoomNames.SECONDROOM) {
+	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT2 ) {
+	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT2);
+	       }
+    }
+}
+
+
+module.exports.harvestSource = function(creep) {
             
-            var droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
-            
-	        if (harvestFromDrops == true && droppedEnergy.length > 0) {
-	            if(creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(droppedEnergy[0]);
-                }
-	        }
-	        else {
-	            
-	            if (creep.memory.harvestSourceId == null ) {
+   if (creep.memory.harvestSourceId == null ) {
 	                  
-                    var sources = creep.room.find(FIND_SOURCES);
-                    
-                    if (creep.memory.harvestSource == null)
-                    {
-                      creep.memory.harvestSourceId = sources[1].id;
-                    }
-	            }
-	            
-	            var sourceObject = Game.getObjectById(creep.memory.harvestSourceId)
-              
+        var sources = creep.room.find(FIND_SOURCES);
+        
+        if (creep.memory.harvestSource == null)
+        {
+          creep.memory.harvestSourceId = sources[1].id;
+        }
+    }
     
-                if(creep.harvest(sourceObject) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceObject);
-                }
-    
-                // if (creep.memory.harvestSource == 0){
-                //     creepsAtSourceSpot = creep.room.lookForAt(LOOK_CREEPS, constants.RoomPositions.SOURCE0HARVESTSPOT);
-                    
-                      
-                //     //If a harvester is already harvesting form source, move to waiting spot
-                //     if (creep.pos != constants.RoomPositions.SOURCE0HARVESTSPOT && creepsAtSourceSpot.length > 0 && creepsAtSourceSpot[0].name != creep.name && creep.pos != constants.RoomPositions.SOURCE0WAITSPOT) {
-                //         creep.moveTo(constants.RoomPositions.SOURCE0WAITSPOT);
-                //     }
-                //     else {
-                    
-                //         if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                //             creep.moveTo(sources[creep.memory.harvestSource]);
-                //         }
-                //     }
-                
-                // }
-                // else {
-                //          if(creep.harvest(sources[creep.memory.harvestSource]) == ERR_NOT_IN_RANGE) {
-                //             creep.moveTo(sources[creep.memory.harvestSource]);
-                //         }
-                // }
-	        }
+    var sourceObject = Game.getObjectById(creep.memory.harvestSourceId)
+  
+
+    if(creep.harvest(sourceObject) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(sourceObject);
+    }
            
 }
 

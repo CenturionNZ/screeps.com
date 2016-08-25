@@ -5,6 +5,10 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+                
+        if (!creep.memory.baseRoom) {
+            creep.memory.baseRoom = constants.RoomNames.MAINROOM;
+        }
 
        //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {

@@ -6,9 +6,16 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        
+        // if (!creep.memory.baseRoom) {
+        //     creep.memory.baseRoom = constants.RoomNames.MAINROOM;
+        // }
+        
 
-        var repairStructures = helper.getStructuresToRepair(creep);
-        var constructionSites = helper.getConstructionsSites(creep);
+        var room = Game.rooms[creep.memory.baseRoom];
+
+        var repairStructures = helper.getStructuresToRepair(creep, creep.memory.baseRoom);
+        var constructionSites = helper.getConstructionsSites(creep, creep.memory.baseRoom);
         
         //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
@@ -29,10 +36,25 @@ var roleBuilder = {
             }
         }
         else if(creep.carry.energy == 0) {
-	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
-                creep.memory.task = constants.CreepTasks.WITHDRAW 
-                creep.say('withdrawing');
+            
+            if (creep.room.storage) {
+    	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
+                    creep.memory.task = constants.CreepTasks.WITHDRAW 
+                    creep.say('withdrawing');
+    	        }
+            }
+            else {
+    	        if (creep.memory.task != constants.CreepTasks.HARVEST) {
+                    creep.memory.task = constants.CreepTasks.HARVEST 
+                    creep.say('harvesting');
+    	        }
+            }
+	    }
+	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
+	        if (creep.carry.energy == creep.carryCapacity) {
+	            creep.memory.task = null;
 	        }
+	        
 	    }
 		else if(constructionSites.length > 0) {
 	        if (creep.memory.task != constants.CreepTasks.BUILD ) {
@@ -53,12 +75,9 @@ var roleBuilder = {
 	        }
 	    }
 
-
         //ACTION TASKS    
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-	       }
+	       helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.BUILD) {
             if(constructionSites.length) {
@@ -78,7 +97,7 @@ var roleBuilder = {
 	        var object = Game.getObjectById(creep.memory.repairStructureId)
 	        
 	        //Repair strucuture to object max hits or to global maximum hits
-	        if (object != null && object.hits < constants.RepairValues.MAXREPAIRHITS && object.hits <  object.hitsMax)
+	        if (object != null && object.hits < constants.RepairValues[creep.memory.baseRoom].MAXREPAIRHITS && object.hits <  object.hitsMax)
 	        {
 	             if(creep.repair(object) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(object);
@@ -91,13 +110,21 @@ var roleBuilder = {
             
 	    }
 	    else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
-	         if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+	         if(creep.upgradeController(room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(room.controller);
             }
 	    }
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
             helper.withdrawEnergy(creep, false);
+        }
+        else if(creep.memory.task == constants.CreepTasks.HARVEST) {
+            
+            if (creep.pos.roomName == constants.RoomNames.SECONDROOM) {
+                creep.memory.harvestSourceId = '579fa9e80700be0674d301b5'
+            }
+            
+            helper.harvestSource(creep);
         }
         
 	}

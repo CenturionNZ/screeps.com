@@ -79,7 +79,7 @@ var roleHarvester3 = {
         }
         else if(creep.memory.task == constants.CreepTasks.HARVEST) {
             
-            helper.harvestSource(creep, constants.RoleContainerSource.HARVESTER, false);
+            helper.harvestSource(creep);
            
         }
 	}

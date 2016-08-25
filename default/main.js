@@ -9,26 +9,30 @@ var roleHarvester3 = require('role.harvester3');
 var roleTransferer = require('role.transferer');
 var roleLinkTransferer = require('role.linkTransferer');
 var roleClaimer = require('role.claimer');
+var myRoom = require('myRoom');
 
 var helper = require('helper');
 var constants = require('constants');
 
 module.exports.loop = function () {
     
-    helper.healTowers();
-    
     helper.clearMemory();
     
-   //console.log(helper.doIOwnRoom(constants.RoomNames.SECONDROOM))
+    roleSpawn.run(Game.spawns[constants.SpawnNames.MAINSPAWN], true, constants.RoomPositions.RENEWCREEPSPOT)
     
-    roleSpawn.run(Game.spawns[constants.SpawnNames.MAINSPAWN])
+    roleSpawn.run(Game.spawns[constants.SpawnNames.SECONDSPAWN], false, constants.RoomPositions.RENEWCREEPSPOT2)
+    
+    for (var name in Game.rooms){
+        myRoom.run(name);
+    }
+    
     
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         
    
-        // if (name == 'Alaina ') {
-        //     creep.moveTo(47,44 );
+        // if (creep.memory.role == 'attacker') {
+        //     creep.moveTo(11,29);
         // }
         // else {
 
@@ -62,9 +66,11 @@ module.exports.loop = function () {
         // }
     }
     
-    var towers = helper.getTowers();
+    var towers1 = helper.getTowers(constants.RoomNames.MAINROOM);
+    towers1.forEach(tower => roleTower.run(tower));
     
-    towers.forEach(tower => roleTower.run(tower));
+    var towers2 = helper.getTowers(constants.RoomNames.SECONDROOM);
+    towers2.forEach(tower => roleTower.run(tower));
     
     var sendingLink = Game.getObjectById('57b44a96eead0db92ed6d3aa');
     var receivingLink = Game.getObjectById('57b444508f645b7a4a9f4dd9');
