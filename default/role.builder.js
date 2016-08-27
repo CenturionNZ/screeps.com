@@ -13,19 +13,22 @@ var roleBuilder = {
         
 
         var room = Game.rooms[creep.memory.baseRoom];
+        
+        helper.setWithdrawSource(creep)
 
         var repairStructures = helper.getStructuresToRepair(creep, creep.memory.baseRoom);
         var constructionSites = helper.getConstructionsSites(creep, creep.memory.baseRoom);
         
         //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.withdrawSourceId = null;
+            //creep.memory.withdrawSourceId = null;
             creep.memory.task = null;
 	        
 	    }
         
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -37,7 +40,7 @@ var roleBuilder = {
         }
         else if(creep.carry.energy == 0) {
             
-            if (creep.room.storage) {
+            if (creep.memory.withdrawSourceId) {
     	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
                     creep.memory.task = constants.CreepTasks.WITHDRAW 
                     creep.say('withdrawing');

@@ -7,9 +7,9 @@ var roleTransferer = {
     run: function(creep) {
         
         
-        creep.memory.baseRoom = constants.RoomNames.MAINROOM;
+        //creep.memory.baseRoom = constants.RoomNames.MAINROOM;
         
-                
+        helper.setWithdrawSource(creep)
         
         var energyStructures = helper.getEmptyEnergyStructures(creep);
        var repairStructures = helper.getStructuresToRepair(creep, creep.memory.baseRoom);
@@ -17,13 +17,13 @@ var roleTransferer = {
         
         //ASSIGN TASKS
       if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.withdrawSourceId = null;
             creep.memory.task = null;
 	        
 	    }
 	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -67,9 +67,7 @@ var roleTransferer = {
 	    
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-	       }
+	      helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
@@ -96,7 +94,7 @@ var roleTransferer = {
                 }
                 else {
     	        
-                    console.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
+                    //nsole.log(Game.rooms[constants.RoomNames.MAINROOM].energyAvailable+' total energy');
                 }
             }
         

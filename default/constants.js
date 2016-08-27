@@ -3,12 +3,68 @@ module.exports.SpawnNames = {
     SECONDSPAWN : 'Spawn2'
 };
 
+module.exports.CreepBodys = {
+    E49N54 : {
+        Default: [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
+        harvester : [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
+        harvester3 : [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE],
+        claimer : [CLAIM,MOVE,MOVE,MOVE],
+        linktransferer : [CARRY,CARRY,MOVE]
+    },
+    E48N54 : {
+        Default: [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
+        harvester : [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
+        harvester3 : [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE],
+        claimer : [CLAIM,MOVE,MOVE,MOVE],
+        linktransferer : [CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
+    }
+}
 
-module.exports.ObjectIds = {
-    SENDINGLINK : '57b44a96eead0db92ed6d3aa',
-    RECEIVINGLINK : '57b444508f645b7a4a9f4dd9',
-    STORAGE: '57b41827a8d0e1d76bf79507'
+module.exports.HarvestSourceId = {
+    E49N54 : {
+        Default: '579fa9eb0700be0674d301f6',
+        Aria : '579fa9eb0700be0674d301f5',
+        Sebastian: '579fa9eb0700be0674d301f6'
+    },
+    E48N54 : {
+        Default: '579fa9e80700be0674d301b5',
+        Thomas: '579fa9e80700be0674d301b3',
+        Alaina: '579fa9e80700be0674d301b5',
+        Liam: '579fa9e80700be0674d301b1',
+        Blake: '579fa9e80700be0674d301b1',
+        Madison: '579fa9e80700be0674d301b1',
+        harvester: '579fa9e80700be0674d301b3'
+    }
 };
+
+module.exports.WithdrawSourceId = {
+    E49N54 : {
+        Default: '57b41827a8d0e1d76bf79507',
+        upgrader : '57b41827a8d0e1d76bf79507',
+        builder: '57b41827a8d0e1d76bf79507',
+        transferer : '57b41827a8d0e1d76bf79507',
+        linkTransferer: '57b444508f645b7a4a9f4dd9'
+    },
+    E48N54 : {
+        Default: '57beeeba0591e31e250c3cdd',
+        builder: '57beeeba0591e31e250c3cdd',
+        transferer: '57beeeba0591e31e250c3cdd',
+        upgrader : '57beeeba0591e31e250c3cdd',
+        linkTransferer: '57be96607e20fc6878fea62d'
+    }
+};
+
+module.exports.TransferSourceId = {
+    E49N54 : {
+        Default: '57b41827a8d0e1d76bf79507',
+        linkTransferer: '57b41827a8d0e1d76bf79507'
+    },
+    E48N54 : {
+        Default: '57beeeba0591e31e250c3cdd',
+        linkTransferer: '57beeeba0591e31e250c3cdd',
+    }
+};
+
 
 
 module.exports.Ticks = {
@@ -44,24 +100,25 @@ module.exports.CreepTasks = {
 };
 
 module.exports.MaxCreeps = {
+    
     E49N54 : {
-        HARVESTER : 4,
+        HARVESTER : 0,
         UPGRADER : 3,
-        BUILDER: 7,
+        BUILDER: 2,
         GUARD: 0,
         HARVESTER3 : 2,
         TRANSFERER : 4,
-        CLAIMER : 0,
+        CLAIMER : 2,
         LINKTRANSFERER: 1,
         ATTACKER: 0
     },
     E48N54 : {
-        HARVESTER : 4,
-        UPGRADER : 3,
-        BUILDER: 7,
+        HARVESTER : 0,
+        UPGRADER : 1,
+        BUILDER: 4,
         GUARD: 0,
-        HARVESTER3 : 2,
-        TRANSFERER : 4,
+        HARVESTER3 : 0,
+        TRANSFERER : 0,
         CLAIMER : 0,
         LINKTRANSFERER: 1,
         ATTACKER: 0
@@ -70,8 +127,9 @@ module.exports.MaxCreeps = {
 
 module.exports.RoomNames = {
     MAINROOM : 'E49N54',
-    ATTACKROOM : 'E47N54',
-    SECONDROOM : 'E48N54'
+    ATTACKROOM : 'E48N55',
+    SECONDROOM : 'E48N54',
+    THIRDROOM : 'E48N55'
 };
 
 
@@ -83,8 +141,8 @@ module.exports.RepairValues = {
     },
     E48N54 : {
         MINWALLHITS : 200000,
-        MINRAMPARTHITS : 150000,
-        MAXREPAIRHITS : 200000
+        MINRAMPARTHITS : 250000,
+        MAXREPAIRHITS : 300000
     }
 };
 
@@ -95,8 +153,8 @@ module.exports.RoomPositions = {
     RENEWCREEPSPOT: new RoomPosition(20,33, module.exports.RoomNames.MAINROOM),
     RENEWCREEPSPOT2: new RoomPosition(22,34, module.exports.RoomNames.SECONDROOM),
     LINKTRANSFERERSPOT: new RoomPosition(20,37, module.exports.RoomNames.MAINROOM),
-    ATTACKROOMSPOT: new RoomPosition(36,33, module.exports.RoomNames.ATTACKROOM),
-    CHECKROOMSPOT: new RoomPosition(47,36, module.exports.RoomNames.ATTACKROOM)
+    ATTACKROOMSPOT: new RoomPosition(34,47, module.exports.RoomNames.ATTACKROOM),
+    CHECKROOMSPOT: new RoomPosition(34,47, module.exports.RoomNames.ATTACKROOM)
 };
 
 module.exports.RoleHarvestSource = {

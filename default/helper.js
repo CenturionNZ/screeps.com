@@ -18,42 +18,64 @@ module.exports.rand = function(max) {
       return ran_number
 	}
 	
-module.exports.getCreepsRoleCount = function(roleName, roomName) {
-    var creeps = _.filter(Game.creeps, (creep) => creep.memory.role == roleName);
+module.exports.getCreepsRoleCount = function(roleName, roomName, countGlobal) {
     
-    return creeps.length;
+    var creepTotal = 0;
+    
+    if (!countGlobal) {
+         var creeps = Game.rooms[roomName].find(FIND_MY_CREEPS, {
+        filter: creep => creep.memory.role == roleName
+        });
+        
+        creepTotal = creeps.length;
+    }
+    else {
+        for (var rName in Game.rooms){
+            var creeps = Game.rooms[rName].find(FIND_MY_CREEPS, {
+                filter: creep => creep.memory.role == roleName
+            });
+            
+            if (creeps) {
+                creepTotal = creepTotal + creeps.length;
+            }
+        
+        }
+    }
+    
+   
+    
+    return creepTotal;
 }
 	
 	
-module.exports.spawnCreeps = function(spawn, roleName, max) {
-	    
-	    var creepCount = this.getCreepsRoleCount(roleName, spawn.pos.roomName) ;
-	    
+module.exports.spawnCreeps = function(spawn, roleName, max, countGlobal) {
+        
+	    var creepCount = this.getCreepsRoleCount(roleName, spawn.room.name, countGlobal) ;
 	    if (creepCount < max) {
 	        
 	        if (roleName == constants.RoleNames.HARVESTER) {
-	                    if (spawn.canCreateCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, { role: roleName, baseRoom: spawn.pos.roomName} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName, baseRoom: spawn.room.name} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.HARVESTER3) {
-	                    if (spawn.canCreateCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], undefined, { role: roleName, baseRoom: spawn.pos.roomName} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName, baseRoom: spawn.room.name} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.CLAIMER) {
-	                    if (spawn.canCreateCreep([CLAIM,MOVE,MOVE,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [CLAIM,MOVE,MOVE,MOVE], undefined, { role: roleName } );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName , baseRoom: spawn.room.name} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.LINKTRANSFERER) {
-	                    if (spawn.canCreateCreep([CARRY,CARRY,MOVE]) == 0) {
-                            var newName = 	spawn.createCreep( [CARRY,CARRY,MOVE], undefined, { role: roleName , baseRoom: spawn.pos.roomName} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName , baseRoom: spawn.room.name} );
 	                    }
 	        }
             else {
-                    if (spawn.canCreateCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]) == 0) {
-                        var newName = spawn.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE], undefined, {role: roleName, baseRoom: spawn.pos.roomName});
+                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name].Default) == 0) {
+                        var newName = spawn.createCreep(constants.CreepBodys[spawn.room.name].Default, undefined, {role: roleName, baseRoom: spawn.room.name});
                 }
             }
 	        
@@ -216,6 +238,55 @@ module.exports.renewCreep = function(creep) {
 }
 
 
+module.exports.setWithdrawSource = function(creep) {
+    
+  var sourceId = constants.WithdrawSourceId[creep.memory.baseRoom][creep.name];
+    
+    if (!sourceId) {
+        var sourceId = constants.WithdrawSourceId[creep.memory.baseRoom][creep.memory.role];
+    }
+    
+    if (!sourceId) {
+        var sourceId = constants.WithdrawSourceId[creep.memory.baseRoom].Default;
+    }
+    
+    
+    creep.memory.withdrawSourceId = sourceId;
+}
+
+
+module.exports.setHarvestSource = function(creep) {
+    
+    var sourceId = constants.HarvestSourceId[creep.memory.baseRoom][creep.name];
+    
+    if (!sourceId) {
+        var sourceId = constants.HarvestSourceId[creep.memory.baseRoom][creep.memory.role];
+    }
+    
+    if (!sourceId) {
+        var sourceId = constants.HarvestSourceId[creep.memory.baseRoom].Default;
+    }
+    
+    
+    creep.memory.harvestSourceId = sourceId;
+}
+
+module.exports.setTransferSource = function(creep) {
+    
+    var sourceId = constants.TransferSourceId[creep.memory.baseRoom][creep.name];
+    
+    if (!sourceId) {
+        var sourceId = constants.TransferSourceId[creep.memory.baseRoom][creep.memory.role];
+    }
+    
+    if (!sourceId) {
+        var sourceId = constants.TransferSourceId[creep.memory.baseRoom].Default;
+    }
+    
+    
+    creep.memory.transferSourceId = sourceId;
+}
+
 module.exports.harvestSource = function(creep) {
             
    if (creep.memory.harvestSourceId == null ) {
@@ -294,10 +365,16 @@ module.exports.withdrawEnergy = function(creep, harvestFromDrops) {
                 }
 	        }
 	        else {
+	             
+                if (creep.memory.withdrawSourceId == null)
+                {
+                    creep.memory.withdrawSourceId  = constants.ObjectIds.STORAGE;
+                }
 	            
-	           var object = Game.getObjectById(constants.ObjectIds.STORAGE)
+	           var object = Game.getObjectById(creep.memory.withdrawSourceId)
                 
-    		if (object != null) {
+    		  if (object != null && _.sum(object.store) >= 100)
+        	        {
             		 if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             				creep.moveTo(object);
             			}

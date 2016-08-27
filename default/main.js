@@ -20,7 +20,7 @@ module.exports.loop = function () {
     
     roleSpawn.run(Game.spawns[constants.SpawnNames.MAINSPAWN], true, constants.RoomPositions.RENEWCREEPSPOT)
     
-    roleSpawn.run(Game.spawns[constants.SpawnNames.SECONDSPAWN], false, constants.RoomPositions.RENEWCREEPSPOT2)
+    roleSpawn.run(Game.spawns[constants.SpawnNames.SECONDSPAWN], true, constants.RoomPositions.RENEWCREEPSPOT2)
     
     for (var name in Game.rooms){
         myRoom.run(name);

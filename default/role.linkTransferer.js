@@ -6,15 +6,18 @@ var roleLinkTransferer = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
+        helper.setTransferSource(creep)
+        helper.setWithdrawSource(creep)
+        
       //ASSIGN TASKS
       if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.withdrawSourceId = null;
             creep.memory.task = null;
 	        
 	    }
 	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -40,13 +43,11 @@ var roleLinkTransferer = {
 	   
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-	       }
+     helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-           var object = Game.getObjectById(constants.ObjectIds.STORAGE)
+           var object = Game.getObjectById(creep.memory.transferSourceId)
             
                 if (object != null) {
                     if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -58,7 +59,7 @@ var roleLinkTransferer = {
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
               
-           var object = Game.getObjectById(constants.ObjectIds.RECEIVINGLINK)
+           var object = Game.getObjectById(creep.memory.withdrawSourceId)
           	     if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(object);
                 }

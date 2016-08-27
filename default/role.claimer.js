@@ -7,7 +7,7 @@ var roleClaimer = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
-        creep.memory.baseRoom = constants.RoomNames.SECONDROOM;
+        creep.memory.baseRoom = constants.RoomNames.THIRDROOM;
         
  	  
  
@@ -54,25 +54,42 @@ var roleClaimer = {
                 }
               }
 	    }
-	    else if(creep.memory.task == constants.CreepTasks.CLAIM && helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
+	    else if(creep.memory.task == constants.CreepTasks.CLAIM ) {
 	        
-	          if (!creep.memory.reachedAttackSpot == true && !helper.compareRoomPos(creep.pos,constants.RoomPositions.ATTACKROOMSPOT)) {
-                      creep.moveTo(constants.RoomPositions.ATTACKROOMSPOT);
-              }
-              else {
-                      creep.memory.reachedAttackSpot = true;
-                var  roomController = Game.rooms[constants.RoomNames.ATTACKROOM].find(FIND_STRUCTURES, {
-                    filter: object => (object.structureType == STRUCTURE_CONTROLLER)
-                });
+	   //   var  roomController = Game.rooms['E48N55'].find(FIND_STRUCTURES, {
+    //                 filter: object => (object.structureType == STRUCTURE_CONTROLLER)
+    //             });
+    //             console.log(roomController[0].name)
                 
-                
-                
-                if (roomController.length > 0) {
-                    if(creep.claimController(roomController[0]) == ERR_NOT_IN_RANGE) {
-                     creep.moveTo(roomController[0]);
+                var controllera = Game.getObjectById('579fa9e80700be0674d301af');
+                if (controllera) {
+                    var a = creep.claimController(controllera);
+                    
+                console.log(a);
+                    
+                    if(creep.claimController(controllera) == ERR_NOT_IN_RANGE) {
+                        
+                     creep.moveTo(controllera);
                     }
                 }
-              }
+	        
+	       //   if (!creep.memory.reachedAttackSpot == true && !helper.compareRoomPos(creep.pos,constants.RoomPositions.ATTACKROOMSPOT)) {
+        //               creep.moveTo(constants.RoomPositions.ATTACKROOMSPOT);
+        //       }
+        //       else {
+        //               creep.memory.reachedAttackSpot = true;
+        //         var  roomController = Game.rooms[constants.RoomNames.ATTACKROOM].find(FIND_STRUCTURES, {
+        //             filter: object => (object.structureType == STRUCTURE_CONTROLLER)
+        //         });
+                
+                
+                
+        //         if (roomController.length > 0) {
+        //             if(creep.claimController(roomController[0]) == ERR_NOT_IN_RANGE) {
+        //              creep.moveTo(roomController[0]);
+        //             }
+        //         }
+        //       }
 	            
 	        
           

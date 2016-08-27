@@ -5,6 +5,8 @@ var roleHarvester3 = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+
+        helper.setHarvestSource(creep)
         
         var emptyContainers = helper.getEmptyContainers(creep);
         
@@ -13,6 +15,7 @@ var roleHarvester3 = {
 	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -43,15 +46,7 @@ var roleHarvester3 = {
 	    
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	        
-	       if (creep.energy >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
-	           creep.moveTo(20,36);
-	       }
-	       else {
-    	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-    	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-    	       }
-	       }
+	         helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             

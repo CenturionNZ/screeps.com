@@ -6,19 +6,19 @@ var roleUpgrader = {
     /** @param {Creep} creep **/
     run: function(creep) {
                 
-        if (!creep.memory.baseRoom) {
-            creep.memory.baseRoom = constants.RoomNames.MAINROOM;
-        }
+ 
+       
+        helper.setWithdrawSource(creep)
 
        //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.withdrawSourceId = null;
             creep.memory.task = null;
 	        
 	    }
 	    
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -44,9 +44,7 @@ var roleUpgrader = {
 	    
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-	       }
+	 	      helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {

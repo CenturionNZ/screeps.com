@@ -18,11 +18,11 @@ var roleSpawn = {
         else if (createCreeps){
             
             
-            if (helper.getCreepsRoleCount(constants.RoleNames.TRANSFERER) < constants.MaxCreeps[spawn.room.name].TRANSFERER)
+            if (helper.getCreepsRoleCount(constants.RoleNames.TRANSFERER, spawn.room.name) < constants.MaxCreeps[spawn.room.name].TRANSFERER)
             {
                 helper.spawnCreeps(spawn, constants.RoleNames.TRANSFERER, constants.MaxCreeps[spawn.room.name].TRANSFERER);
             }
-            else if (helper.getCreepsRoleCount(constants.RoleNames.HARVESTER3) < constants.MaxCreeps[spawn.room.name].HARVESTER3)
+            else if (helper.getCreepsRoleCount(constants.RoleNames.HARVESTER3, spawn.room.name) < constants.MaxCreeps[spawn.room.name].HARVESTER3)
             {
                  helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER3, constants.MaxCreeps[spawn.room.name].HARVESTER3);
             }
@@ -34,11 +34,14 @@ var roleSpawn = {
                 
                 helper.spawnCreeps(spawn, constants.RoleNames.UPGRADER, constants.MaxCreeps[spawn.room.name].UPGRADER);
                 
-                helper.spawnCreeps(spawn, constants.RoleNames.CLAIMER, constants.MaxCreeps[spawn.room.name].CLAIMER);
-                
                 helper.spawnCreeps(spawn, constants.RoleNames.ATTACKER, constants.MaxCreeps[spawn.room.name].ATTACKER);
                 
                 helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER, constants.MaxCreeps[spawn.room.name].HARVESTER);
+                
+                if (spawn.name == constants.SpawnNames.MAINSPAWN) {
+                    helper.spawnCreeps(spawn, constants.RoleNames.CLAIMER, constants.MaxCreeps[spawn.room.name].CLAIMER, true);
+                
+                }
                 
                 // if (helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
                 //       helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER, constants.MaxCreeps.HARVESTER);

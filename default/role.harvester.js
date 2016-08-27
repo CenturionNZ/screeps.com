@@ -6,20 +6,24 @@ var roleHarvester = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
+        
         var secondRoom = Game.rooms[constants.RoomNames.SECONDROOM];
         creep.memory.baseRoom = constants.RoomNames.SECONDROOM;
         
+        helper.setHarvestSource(creep)
+        helper.setTransferSource(creep)
         
         var energyStructures = helper.getEmptyEnergyStructures(creep, secondRoom);
         
         if (creep.memory.harvestSourceId == null) {
-            creep.memory.harvestSourceId = '579fa9e80700be0674d301b3';
+            creep.memory.harvestSourceId = '579fa9e80700be0674d301b0';
         }
         
 
         //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
                 creep.memory.task = null;
             }
         }
@@ -41,7 +45,7 @@ var roleHarvester = {
 	        }
 	        
 	    }
-	    else if(energyStructures.length > 0 && creep.carry.energy > 0) {
+	    else if((creep.memory.transferSourceId || energyStructures.length > 0) && creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
     	        creep.memory.task = constants.CreepTasks.TRANSFER 
     	        creep.say('transfering');
@@ -59,32 +63,40 @@ var roleHarvester = {
 	       helper.renewCreep(creep); 
 	    }
         else   if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
-               
-            var room = Game.rooms[constants.RoomNames.SECONDROOM];
             
-            var targets = room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) &&
-                            structure.energy < structure.energyCapacity;
-                    }
-            });
-            
-            if (targets.length == 0) {
+            if (creep.memory.transferSourceId) {
+                var target = Game.getObjectById(creep.memory.transferSourceId)
+            }
+            else {
+                   
+                var room = Game.rooms[constants.RoomNames.SECONDROOM];
+                
                 var targets = room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+                            return (structure.structureType == STRUCTURE_TOWER) &&
                                 structure.energy < structure.energyCapacity;
                         }
                 });
-             
+                
+                if (targets.length == 0) {
+                    var targets = room.find(FIND_STRUCTURES, {
+                            filter: (structure) => {
+                                return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+                                    structure.energy < structure.energyCapacity;
+                            }
+                    });
+                 
+                }
+                
+                if(targets.length > 0) {
+                    target = targets[0];
+                }
+                
             }
             
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
-                }
-                else {
-    	        
+            if(target) {
+                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
                 }
             }
         
