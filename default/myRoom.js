@@ -8,6 +8,8 @@ var myRoom = {
          
           var towers = helper.getTowers(roomName);
             towers.forEach(tower => roleTower.run(tower));
+            
+          helper.activateLinks(roomName);    
          
      }
     

@@ -5,12 +5,20 @@ var constants = require('constants');
 var roleTower = {
      run: function(tower) {
          
-         var enemyTargets = tower.room.find(Game.HOSTILE_CREEPS);
-         var repairStructures = helper.getStructuresToRepair(tower);
+         //Find healers first
+         var      enemyTargets = tower.room.find(FIND_HOSTILE_CREEPS, {
+                filter: object => ((object.body.filter(object => (object.type == 'heal'))).length > 0)
+            });
+            
+            if (enemyTargets.length == 0) {
+                 var      enemyTargets = tower.room.find(FIND_HOSTILE_CREEPS);
+            }
+         
          
          if (enemyTargets.length > 0) {
              tower.attack(enemyTargets[0]);
          }
+         
         //  else if (repairStructures.length > 0) {
         //      tower.repair(repairStructures[0]);
         //  }

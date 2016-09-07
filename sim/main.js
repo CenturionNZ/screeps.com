@@ -63,9 +63,9 @@ module.exports.loop = function () {
         // }
     }
     
-    // var towers = helper.getTowers();
+    var towers = helper.getTowers();
     
-    // towers.forEach(tower => roleTower.run(tower));
+    towers.forEach(tower => roleTower.run(tower));
     
     // var sendingLink = Game.getObjectById('57b44a96eead0db92ed6d3aa');
     // var receivingLink = Game.getObjectById('57b444508f645b7a4a9f4dd9');

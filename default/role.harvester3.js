@@ -7,9 +7,10 @@ var roleHarvester3 = {
     run: function(creep) {
 
         helper.setHarvestSource(creep)
+        helper.setTransferSource(creep)
+        
         
         var emptyContainers = helper.getEmptyContainers(creep);
-        
         //ASSIGN TASKS
         
 	    
@@ -50,20 +51,20 @@ var roleHarvester3 = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-            if (creep.memory.transferContainerId == null){
+            if (creep.memory.transferSourceId == null){
                 if (creep.memory.harvestSource == 1) {
-                    creep.memory.transferContainerId = '57b41827a8d0e1d76bf79507';
+                    creep.memory.transferSourceId = '57b41827a8d0e1d76bf79507';
                 }
                 else 
                 if (creep.memory.harvestSource == 0) {
-                    creep.memory.transferContainerId = '57b44a96eead0db92ed6d3aa';
+                    creep.memory.transferSourceId = '57b44a96eead0db92ed6d3aa';
                 }
                 else {
-                    creep.memory.transferContainerId = '57b41827a8d0e1d76bf79507';
+                    creep.memory.transferSourceId = '57b41827a8d0e1d76bf79507';
                 }
             }
             
-            var object = Game.getObjectById(creep.memory.transferContainerId)
+            var object = Game.getObjectById(creep.memory.transferSourceId)
             
                 if (object != null) {
                     if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

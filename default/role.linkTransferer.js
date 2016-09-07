@@ -40,29 +40,36 @@ var roleLinkTransferer = {
     	        creep.say('transfering');
 	        }
 	    }
-	   
         //ACTION TASKS  
 	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
-     helper.renewCreep(creep); 
+          helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-           var object = Game.getObjectById(creep.memory.transferSourceId)
-            
-                if (object != null) {
-                    if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(object);
+            if (creep.memory.transferSpot && !helper.compareRoomPos(creep.pos,constants.RoomPositions[creep.memory.transferSpot])) {
+                      creep.moveTo(constants.RoomPositions[creep.memory.transferSpot]);
+              }  
+            else {
+                var object = Game.getObjectById(creep.memory.transferSourceId)
+                    if (object != null) {
+                        if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(object);
+                    }
                 }
             }
         
         }
         else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
+               if (creep.memory.transferSpot && !helper.compareRoomPos(creep.pos,constants.RoomPositions[creep.memory.transferSpot])) {
+                      creep.moveTo(constants.RoomPositions[creep.memory.transferSpot]);
+              }  
+            else {
+               var object = Game.getObjectById(creep.memory.withdrawSourceId)
+              	     if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(object);
+                    }
             
-              
-           var object = Game.getObjectById(creep.memory.withdrawSourceId)
-          	     if(creep.withdraw(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(object);
-                }
+            }
            
         }
 	}

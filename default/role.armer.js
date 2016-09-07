@@ -1,7 +1,7 @@
 var helper = require('helper');
 var constants = require('constants');
 
-var roleTransferer = {
+var roleArmer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -71,22 +71,24 @@ var roleTransferer = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-            var targets = creep.room.find(FIND_STRUCTURES, {
+         var targets = creep.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_TOWER) &&
+                                structure.energy < structure.energyCapacity;
+                        }
+                });
+                
+                
+            if (targets.length == 0) {
+                var targets = creep.room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
                                 structure.energy < structure.energyCapacity;
                         }
                 });
-                
-            if (targets.length == 0) {
-                 var targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) &&
-                            structure.energy < structure.energyCapacity;
-                    }
-            });
-             
             }
+             
+            
             
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -142,4 +144,4 @@ var roleTransferer = {
 	}
 };
 
-module.exports = roleTransferer;
+module.exports = roleArmer;

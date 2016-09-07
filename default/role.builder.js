@@ -40,18 +40,20 @@ var roleBuilder = {
         }
         else if(creep.carry.energy == 0) {
             
-            if (creep.memory.withdrawSourceId) {
-    	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
-                    creep.memory.task = constants.CreepTasks.WITHDRAW 
-                    creep.say('withdrawing');
-    	        }
-            }
-            else {
+            
+            if (creep.memory.harvestSourceId) {
     	        if (creep.memory.task != constants.CreepTasks.HARVEST) {
                     creep.memory.task = constants.CreepTasks.HARVEST 
                     creep.say('harvesting');
     	        }
             }
+            else {
+    	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
+                    creep.memory.task = constants.CreepTasks.WITHDRAW 
+                    creep.say('withdrawing');
+    	        }
+            }
+           
 	    }
 	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
 	        if (creep.carry.energy == creep.carryCapacity) {
@@ -65,7 +67,7 @@ var roleBuilder = {
 				creep.say('building');
 	        }
 	    }		
-		else if(repairStructures.length > 0) {
+		else if(repairStructures.length > 0 || creep.memory.repairStructureId) {
             if (creep.memory.task != constants.CreepTasks.REPAIR) {
     	        creep.memory.task = constants.CreepTasks.REPAIR 
 				creep.say('repairing');
@@ -113,7 +115,7 @@ var roleBuilder = {
             
 	    }
 	    else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
-	         if(creep.upgradeController(room.controller) == ERR_NOT_IN_RANGE) {
+	         if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(room.controller);
             }
 	    }

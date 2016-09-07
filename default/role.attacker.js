@@ -9,33 +9,63 @@ var roleAttacker = {
         
         //creep.moveTo()
         
-        enemyTargets = creep.room.find(FIND_CREEPS, {
-                filter: object => (!object.owner || object.owner.username != 'CenturionNZ')
+        var attackObject = Game.getObjectById(creep.memory.attackId);
+        
+                   //Find healers first
+         var      enemyTargets = creep.room.find(FIND_HOSTILE_CREEPS, {
+                filter: object => ((object.body.filter(object => (object.type == 'heal'))).length > 0)
             });
             
-        if (creep.memory.task == null) {
-            creep.memory.task = constants.CreepTasks.GUARD;
-        }
-        else if (enemyTargets.length > 0 && creep.memory.task != constants.CreepTasks.ATTACK) {
-            creep.memory.task = constants.CreepTasks.ATTACK;
-        }
-        
-        if (creep.memory.task == constants.CreepTasks.GUARD) {
-             
-            if (creep.pos != constants.RoomPositions.GUARDPOST1) {
-                creep.moveTo(constants.RoomPositions.GUARDPOST1);
+            if (enemyTargets.length == 0) {
+                 var      enemyTargets = creep.room.find(FIND_HOSTILE_CREEPS);
+            }
+            
+          if (creep.memory.task == constants.CreepTasks.RENEW) {
+             if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
+                 creep.moveTo(creep.pos.x, creep.pos.y + 1);
+                creep.memory.task = null;
             }
         }
-        else if (constants.CreepTasks.ATTACK) {
-
-          if (enemyTargets.length > 0) {
+        else if (creep.ticksToLive < constants.Ticks.CREEPMINTICKSTOLIVE) {
+            if (creep.memory.task != constants.CreepTasks.RENEW) {
+                creep.memory.task = constants.CreepTasks.RENEW; 
+                creep.say('renewing');
+            }
+        }
+        else if (attackObject) {
+            creep.memory.task = constants.CreepTasks.ATTACK;
+        }
+        else if (enemyTargets.length > 0) {
+            creep.memory.task = constants.CreepTasks.ATTACK;
+        }
+       else {
+            creep.memory.task = constants.CreepTasks.GUARD;
+       }
+        
+        //ACTION TASKS  
+	    if(creep.memory.task == constants.CreepTasks.RENEW ) {
+          helper.renewCreep(creep); 
+	    }
+        else if (creep.memory.task == constants.CreepTasks.GUARD ) {
+             
+            if (creep.pos != constants.RoomPositions[creep.memory.baseRoom].GUARDPOST) {
+                creep.moveTo(constants.RoomPositions[creep.memory.baseRoom].GUARDPOST);
+            }
+        }
+        else if (creep.memory.task == constants.CreepTasks.ATTACK) {
+            
+            if (attackObject) {
+                if(creep.attack(attackObject) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(attackObject);
+                }
+            }
+            else if (enemyTargets.length > 0) {
               if(creep.attack(enemyTargets[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(enemyTargets[0]);
                 }
             }
-          
-        
         }
+         
 	}
 };
 

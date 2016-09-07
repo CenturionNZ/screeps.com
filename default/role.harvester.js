@@ -8,18 +8,21 @@ var roleHarvester = {
         
         
         var secondRoom = Game.rooms[constants.RoomNames.SECONDROOM];
-        creep.memory.baseRoom = constants.RoomNames.SECONDROOM;
+        var thirdRoom = Game.rooms[constants.RoomNames.THIRDROOM];
+        creep.memory.baseRoom = constants.RoomNames.THIRDROOM;
         
         helper.setHarvestSource(creep)
         helper.setTransferSource(creep)
-        
         var energyStructures = helper.getEmptyEnergyStructures(creep, secondRoom);
+        var constructionSites = helper.getConstructionsSites(creep, constants.RoomNames.THIRDROOM);
         
-        if (creep.memory.harvestSourceId == null) {
-            creep.memory.harvestSourceId = '579fa9e80700be0674d301b0';
+        try {
+        var repairStructures = helper.getStructuresToRepair(creep, constants.RoomNames.THIRDROOM);
+        }
+        catch(err) {
+            
         }
         
-
         //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.RENEW) {
              if (creep.ticksToLive >= constants.Ticks.CREEPMAXTICKSTOLIVE) {
@@ -45,6 +48,19 @@ var roleHarvester = {
 	        }
 	        
 	    }
+	    
+// 		else if(constructionSites.length > 0) {
+// 	        if (creep.memory.task != constants.CreepTasks.BUILD ) {
+// 				creep.memory.task = constants.CreepTasks.BUILD 
+// 				creep.say('building');
+// 	        }
+// 	    }		
+// 		else if(repairStructures && repairStructures.length > 0) {
+//             if (creep.memory.task != constants.CreepTasks.REPAIR) {
+//     	        creep.memory.task = constants.CreepTasks.REPAIR 
+// 				creep.say('repairing');
+//             }
+// 	    }
 	    else if((creep.memory.transferSourceId || energyStructures.length > 0) && creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
     	        creep.memory.task = constants.CreepTasks.TRANSFER 
@@ -57,12 +73,43 @@ var roleHarvester = {
     	        creep.say('upgrading');
 	        }
 	    }
+	   
 	    
         //ACTION TASKS  
         if(creep.memory.task == constants.CreepTasks.RENEW ) {
 	       helper.renewCreep(creep); 
 	    }
-        else   if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
+	    else if(creep.memory.task == constants.CreepTasks.BUILD) {
+            if(constructionSites.length) {
+                if(creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(constructionSites[0]);
+                }
+            }
+	    }
+	    else if(creep.memory.task == constants.CreepTasks.REPAIR) {
+	        
+	        //Store structure to be repaired
+	        if (creep.memory.repairStructureId == null)
+	        {
+	            creep.memory.repairStructureId = repairStructures[0].id;
+	        }
+	        
+	        var object = Game.getObjectById(creep.memory.repairStructureId)
+	        
+	        //Repair strucuture to object max hits or to global maximum hits
+	        if (object != null && object.hits < constants.RepairValues[creep.memory.baseRoom].MAXREPAIRHITS && object.hits <  object.hitsMax)
+	        {
+	             if(creep.repair(object) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(object);
+                }
+	        }
+	        else {
+	            creep.memory.repairStructureId = null;
+	            creep.memory.task = null;
+	        }
+            
+	    }	
+        else  if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
             if (creep.memory.transferSourceId) {
                 var target = Game.getObjectById(creep.memory.transferSourceId)
@@ -102,13 +149,15 @@ var roleHarvester = {
         
         }
 	   else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
-            if(creep.upgradeController(secondRoom.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(secondRoom.controller);
+            if(creep.upgradeController(thirdRoom.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(thirdRoom.controller);
             }
         }
         else {
-     
+          
                 helper.harvestSource(creep );
+                
+     
            
         }
 	}

@@ -11,7 +11,7 @@ var roleClaimer = {
         
  	  
  
-        creep.memory.task = constants.CreepTasks.RESERVE
+        creep.memory.task = constants.CreepTasks.CLAIM
         
         // else if (creep.memory.task == constants.CreepTasks.CHECKROOM && helper.compareRoomPos(creep.pos,constants.RoomPositions.CHECKROOMSPOT)) {
             

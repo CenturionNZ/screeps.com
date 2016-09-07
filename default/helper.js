@@ -19,20 +19,12 @@ module.exports.rand = function(max) {
 	}
 	
 module.exports.getCreepsRoleCount = function(roleName, roomName, countGlobal) {
-    
+
     var creepTotal = 0;
     
-    if (!countGlobal) {
-         var creeps = Game.rooms[roomName].find(FIND_MY_CREEPS, {
-        filter: creep => creep.memory.role == roleName
-        });
-        
-        creepTotal = creeps.length;
-    }
-    else {
-        for (var rName in Game.rooms){
+     for (var rName in Game.rooms){
             var creeps = Game.rooms[rName].find(FIND_MY_CREEPS, {
-                filter: creep => creep.memory.role == roleName
+                filter: creep => creep.memory.role == roleName && creep.memory.baseRoom == roomName
             });
             
             if (creeps) {
@@ -40,47 +32,107 @@ module.exports.getCreepsRoleCount = function(roleName, roomName, countGlobal) {
             }
         
         }
-    }
+    
+    // if (!countGlobal) {
+    //      var creeps = Game.rooms[roomName].find(FIND_MY_CREEPS, {
+    //     filter: creep => creep.memory.role == roleName
+    //     });
+        
+    //     creepTotal = creeps.length;
+    // }
+    // else {
+    //     for (var rName in Game.rooms){
+    //         var creeps = Game.rooms[rName].find(FIND_MY_CREEPS, {
+    //             filter: creep => creep.memory.role == roleName && creep.memory.baseRoom == roomName
+    //         });
+            
+    //         if (creeps) {
+    //             creepTotal = creepTotal + creeps.length;
+    //         }
+        
+    //     }
+    // }
     
    
     
     return creepTotal;
 }
+
+module.exports.spawnCreeps = function(spawn, roomName) {
+
+         
+            if (this.getCreepsRoleCount(constants.RoleNames.TRANSFERER, roomName) < constants.MaxCreeps[roomName].TRANSFERER)
+            {
+                this.spawnCreep(spawn,  roomName, constants.RoleNames.TRANSFERER, constants.MaxCreeps[roomName].TRANSFERER);
+            }
+            else if (this.getCreepsRoleCount(constants.RoleNames.HARVESTER3, roomName) < constants.MaxCreeps[roomName].HARVESTER3)
+            {
+                 this.spawnCreep(spawn, roomName,  constants.RoleNames.HARVESTER3, constants.MaxCreeps[roomName].HARVESTER3);
+            }
+            else
+            {
+                this.spawnCreep(spawn, roomName, constants.RoleNames.LINKTRANSFERER, constants.MaxCreeps[roomName].LINKTRANSFERER);
+                
+                this.spawnCreep(spawn, roomName,  constants.RoleNames.BUILDER, constants.MaxCreeps[roomName].BUILDER);
+                
+                this.spawnCreep(spawn, roomName,  constants.RoleNames.UPGRADER, constants.MaxCreeps[roomName].UPGRADER);
+                
+                this.spawnCreep(spawn, roomName,  constants.RoleNames.ATTACKER, constants.MaxCreeps[roomName].ATTACKER);
+                
+                this.spawnCreep(spawn, roomName,  constants.RoleNames.HARVESTER, constants.MaxCreeps[roomName].HARVESTER);
+                
+                this.spawnCreep(spawn, roomName,  constants.RoleNames.ARMER, constants.MaxCreeps[roomName].ARMER);
+                
+                // if (spawn.name == constants.SpawnNames.MAINSPAWN) {
+                //     helper.spawnCreep(spawn, constants.RoleNames.CLAIMER, constants.MaxCreeps[spawn.room.name].CLAIMER, true);
+                
+                // }
+                
+                // if (helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
+                //       helper.spawnCreeps(spawn, constants.RoleNames.HARVESTER, constants.MaxCreeps.HARVESTER);
+                // }
+            }
+}
 	
 	
-module.exports.spawnCreeps = function(spawn, roleName, max, countGlobal) {
+module.exports.spawnCreep = function(spawn,roomName, roleName, max, countGlobal) {
         
-	    var creepCount = this.getCreepsRoleCount(roleName, spawn.room.name, countGlobal) ;
+	    var creepCount = this.getCreepsRoleCount(roleName, roomName, countGlobal) ;
 	    if (creepCount < max) {
 	        
 	        if (roleName == constants.RoleNames.HARVESTER) {
-	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
-                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName, baseRoom: spawn.room.name} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[roomName][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[roomName][roleName], undefined, { role: roleName, baseRoom: roomName} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.HARVESTER3) {
-	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
-                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName, baseRoom: spawn.room.name} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[roomName][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[roomName][roleName], undefined, { role: roleName, baseRoom: roomName} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.CLAIMER) {
-	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
-                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName , baseRoom: spawn.room.name} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[roomName][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[roomName][roleName], undefined, { role: roleName , baseRoom: roomName} );
 	                    }
 	        }
 	        else if (roleName == constants.RoleNames.LINKTRANSFERER) {
-	                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name][roleName]) == 0) {
-                            var newName = 	spawn.createCreep( constants.CreepBodys[spawn.room.name][roleName], undefined, { role: roleName , baseRoom: spawn.room.name} );
+	                    if (spawn.canCreateCreep(constants.CreepBodys[roomName][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[roomName][roleName], undefined, { role: roleName , baseRoom: roomName} );
+	                    }
+	        }
+	        else if (roleName == constants.RoleNames.ATTACKER) {
+	                    if (spawn.canCreateCreep(constants.CreepBodys[roomName][roleName]) == 0) {
+                            var newName = 	spawn.createCreep( constants.CreepBodys[roomName][roleName], undefined, { role: roleName , baseRoom: roomName} );
 	                    }
 	        }
             else {
-                    if (spawn.canCreateCreep(constants.CreepBodys[spawn.room.name].Default) == 0) {
-                        var newName = spawn.createCreep(constants.CreepBodys[spawn.room.name].Default, undefined, {role: roleName, baseRoom: spawn.room.name});
+                    if (spawn.canCreateCreep(constants.CreepBodys[roomName].Default) == 0) {
+                        var newName = spawn.createCreep(constants.CreepBodys[roomName].Default, undefined, {role: roleName, baseRoom: roomName});
                 }
             }
 	        
 	        if (newName) {
-                console.log('Spawning new  ' + roleName + ':' + newName);
+                console.log('Spawning new  ' + roleName + ':' + newName + '. BaseRoom: ' + roomName);
 	        }
 	    }
 	}	
@@ -140,13 +192,28 @@ module.exports.getStructuresToRepair = function(creep, roomId) {
         room = Game.rooms[roomId];
     }
     
-    //get roads
+    //Towers
      var repairStructures = room.find(FIND_STRUCTURES, {
+            filter: object => object.structureType == STRUCTURE_TOWER && object.hits  < (object.hitsMax / 2)
+        });
+        
+    //get containers
+    if (repairStructures.length == 0) {
+         repairStructures = room.find(FIND_STRUCTURES, {
+                filter: object => object.structureType == STRUCTURE_CONTAINER && object.hits  < (object.hitsMax / 3)
+            });
+    }    
+    
+    
+    //get roads
+    if (repairStructures.length == 0) {
+         repairStructures = room.find(FIND_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_ROAD && object.hits  < (object.hitsMax / 3)
             });
-
+    }
     
-    //get ramparts
+    
+       //get ramparts
     if (repairStructures.length == 0) {
           repairStructures = room.find(FIND_MY_STRUCTURES, {
                 filter: object => object.structureType == STRUCTURE_RAMPART && object.hits  < constants.RepairValues[room.name].MINRAMPARTHITS
@@ -177,12 +244,18 @@ module.exports.getConstructionsSites = function(creep, roomId) {
         var room = Game.rooms['E49N54'];
     }
     else {
+        
         var room = Game.rooms[roomId];
         
     }
     
-    var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
+    try {
     
+        var constructionSites = room.find(FIND_CONSTRUCTION_SITES);
+    }
+    catch(err) {
+        
+    }
     // if (constructionSites.length == 0) {
     //     for (var roomName in Game.rooms){
         
@@ -225,15 +298,10 @@ module.exports.getTowers = function(roomName) {
 
 module.exports.renewCreep = function(creep) {
     
-    if (creep.memory.baseRoom == constants.RoomNames.MAINROOM) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT);
-	       }
-    }
-    else if (creep.memory.baseRoom == constants.RoomNames.SECONDROOM) {
-	       if (creep.pos != constants.RoomPositions.RENEWCREEPSPOT2 ) {
-	            creep.moveTo(constants.RoomPositions.RENEWCREEPSPOT2);
-	       }
+    var renewScreepSpot = constants.RenewScreepSpot[creep.memory.baseRoom]
+
+      if (creep.pos != renewScreepSpot) {
+        creep.moveTo(renewScreepSpot);
     }
 }
 
@@ -288,23 +356,31 @@ module.exports.setTransferSource = function(creep) {
 }
 
 module.exports.harvestSource = function(creep) {
-            
-   if (creep.memory.harvestSourceId == null ) {
+    
+    
+    if (creep.memory.harvestWaitingSpot && creep.pos.roomName != constants.RoomPositions[creep.memory.harvestWaitingSpot].roomName) {
+        creep.moveTo(constants.RoomPositions[creep.memory.harvestWaitingSpot])
+    }
+    else {
+          if (creep.memory.harvestSourceId == null ) {
 	                  
-        var sources = creep.room.find(FIND_SOURCES);
+            var sources = creep.room.find(FIND_SOURCES);
+            
+            if (creep.memory.harvestSource == null)
+            {
+              creep.memory.harvestSourceId = sources[1].id;
+            }
+        }
         
-        if (creep.memory.harvestSource == null)
-        {
-          creep.memory.harvestSourceId = sources[1].id;
+        var sourceObject = Game.getObjectById(creep.memory.harvestSourceId)
+      
+    
+        if(creep.harvest(sourceObject) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(sourceObject);
         }
     }
-    
-    var sourceObject = Game.getObjectById(creep.memory.harvestSourceId)
-  
-
-    if(creep.harvest(sourceObject) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(sourceObject);
-    }
+            
+ 
            
 }
 
@@ -403,5 +479,25 @@ module.exports.doIOwnRoom = function(roomName) {
      }
      
      return ownRoom;
+}
+
+module.exports.activateLinks = function(roomName) {
+    
+   links = Game.rooms[roomName].find(FIND_STRUCTURES, {
+            filter: object => object.structureType == STRUCTURE_LINK
+        });
+        
+    for(i = 0; i < links.length; i++) {
+        var sendingLink = links[i];
+          var sendToId = constants.Links[sendingLink.id];
+         var receivingLink = Game.getObjectById(sendToId);
+         if (receivingLink) {
+              if (sendingLink.cooldown == 0 && sendingLink.energy >= 50 && receivingLink.energy < receivingLink.energyCapacity) {
+                    sendingLink.transferEnergy(receivingLink);
+                }
+         }
+         
+    }    
+ 
 }
             

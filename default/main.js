@@ -7,6 +7,7 @@ var roleSpawn = require('role.spawn');
 var roleHarvester2 = require('role.harvester2');
 var roleHarvester3 = require('role.harvester3');
 var roleTransferer = require('role.transferer');
+var roleArmer = require('role.armer');
 var roleLinkTransferer = require('role.linkTransferer');
 var roleClaimer = require('role.claimer');
 var myRoom = require('myRoom');
@@ -22,6 +23,8 @@ module.exports.loop = function () {
     
     roleSpawn.run(Game.spawns[constants.SpawnNames.SECONDSPAWN], true, constants.RoomPositions.RENEWCREEPSPOT2)
     
+    roleSpawn.run(Game.spawns[constants.SpawnNames.THIRDSPAWN], true, constants.RoomPositions.RENEWCREEPSPOT3)
+    
     for (var name in Game.rooms){
         myRoom.run(name);
     }
@@ -30,9 +33,13 @@ module.exports.loop = function () {
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         
+        // if (name == 'Kylie') {
+        //     creep.memory.baseRoom = 'E48N55';
+        // }
    
-        // if (creep.memory.role == 'attacker') {
-        //     creep.moveTo(11,29);
+        // if (creep.memory.role == 'attacker' && creep.pos.roomName != constants.RoomNames.THIRDROOM) {
+        //     creep.moveTo(new RoomPosition(42,22, constants.RoomNames.THIRDROOM));
+        //     //creep.memory.baseRoom = 'E48N55';
         // }
         // else {
 
@@ -63,21 +70,24 @@ module.exports.loop = function () {
             else if(creep.memory.role == constants.RoleNames.CLAIMER) {
                 roleClaimer.run(creep);
             }
+            else if(creep.memory.role == constants.RoleNames.ARMER) {
+                roleArmer.run(creep);
+            }
         // }
     }
     
-    var towers1 = helper.getTowers(constants.RoomNames.MAINROOM);
-    towers1.forEach(tower => roleTower.run(tower));
+    // var towers1 = helper.getTowers(constants.RoomNames.MAINROOM);
+    // towers1.forEach(tower => roleTower.run(tower));
     
-    var towers2 = helper.getTowers(constants.RoomNames.SECONDROOM);
-    towers2.forEach(tower => roleTower.run(tower));
+    // var towers2 = helper.getTowers(constants.RoomNames.SECONDROOM);
+    // towers2.forEach(tower => roleTower.run(tower));
     
-    var sendingLink = Game.getObjectById('57b44a96eead0db92ed6d3aa');
-    var receivingLink = Game.getObjectById('57b444508f645b7a4a9f4dd9');
+    // var sendingLink = Game.getObjectById('57b44a96eead0db92ed6d3aa');
+    // var receivingLink = Game.getObjectById('57b444508f645b7a4a9f4dd9');
     
-    if (sendingLink.cooldown == 0 && sendingLink.energy >= 50 && receivingLink.energy < receivingLink.energyCapacity) {
-        sendingLink.transferEnergy(receivingLink);
-    }
+    // if (sendingLink.cooldown == 0 && sendingLink.energy >= 50 && receivingLink.energy < receivingLink.energyCapacity) {
+    //     sendingLink.transferEnergy(receivingLink);
+    // }
     
     
     if (helper.doIOwnRoom(constants.RoomNames.SECONDROOM)) {
