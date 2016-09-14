@@ -6,7 +6,7 @@ module.exports.SpawnNames = {
 
 module.exports.CreepBodys = {
     E49N54 : {
-        Default: [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
+        Default: [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
         harvester : [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
         harvester3 : [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE],
         claimer : [CLAIM,MOVE,MOVE,MOVE],
@@ -34,24 +34,24 @@ module.exports.CreepBodys = {
 module.exports.HarvestSourceId = {
     E49N54 : {
         harvester3: '579fa9eb0700be0674d301f6',
-         Lily : '579fa9eb0700be0674d301f5',
-        Sebastian: '579fa9eb0700be0674d301f6'
+        Lincoln: '579fa9eb0700be0674d301f6',
+        Nicholas: '579fa9eb0700be0674d301f5',
+        Tyler: '579fab8cb1f02a3b0cff063d',
     },
     E48N54 : {
-        Default: '579fa9e80700be0674d301b3',
-        Grayson: '579fa9e80700be0674d301b3',
-        Julia: '579fa9e80700be0674d301b3',
-        Zoe: '579fa9e80700be0674d301b5',
-        harvester: '579fa9e80700be0674d301b1',
-        Levi: '579fa9e80700be0674d301b3',
-        Eva: '579fa9e60700be0674d30171'
+        harvester3: '579fa9e80700be0674d301b3',
+        Lillian: '579fa9e80700be0674d301b5',
+        Jayden: '579fa9e80700be0674d301b3',
+         Brayden: '579fa9e60700be0674d30171',
+         Bella: '579fab8cb1f02a3b0cff062b'
     },
     E48N55 : {
-        Default: '579fa9e80700be0674d301b0',
-        Levi: '579fa9e80700be0674d301b1',
-        Maria: '579fa9e80700be0674d301b1',
-        Addison: '579fa9eb0700be0674d301f1',
-        harvester: '579fa9e80700be0674d301b1',
+        harvester3: '579fa9e80700be0674d301b0',
+        Adrian: '579fa9e80700be0674d301b0',
+         Caroline: '579fa9e80700be0674d301b1',
+        Charlie: '579fa9eb0700be0674d301f1',
+        Allison: '579fa9eb0700be0674d301f1',
+        Amelia: '579fa9eb0700be0674d301f1'
     }
 };
 
@@ -65,14 +65,7 @@ module.exports.WithdrawSourceId = {
     },
     E48N54 : {
         Default: '57beeeba0591e31e250c3cdd',
-        builder: '57beeeba0591e31e250c3cdd',
-        transferer: '57beeeba0591e31e250c3cdd',
-        linkTransferer: '57c3c8157c29305404ff2eaa',
-        upgrader : '57beeeba0591e31e250c3cdd',
-        Jayce: '57be96607e20fc6878fea62d',
-        Dylan: '57c3c8157c29305404ff2eaa',
-        Zachary: '57c68051cd27d5141002d78d',
-        Annabelle: '57c68051cd27d5141002d78d'
+        linkTransferer: '57c3c8157c29305404ff2eaa'
         
     },
     E48N55 : {
@@ -87,23 +80,18 @@ module.exports.WithdrawSourceId = {
 module.exports.TransferSourceId = {
     E49N54 : {
         Default: '57b41827a8d0e1d76bf79507',
-        Sebastian: '57b41827a8d0e1d76bf79507',
-         Lily: '57b44a96eead0db92ed6d3aa',
-        linkTransferer: '57b41827a8d0e1d76bf79507'
+        linkTransferer: '57b41827a8d0e1d76bf79507',
+        Nicholas: '57b44a96eead0db92ed6d3aa',
     },
     E48N54 : {
         Default: '57beeeba0591e31e250c3cdd',
-         Zoe: '57c63cc7ddd9c8ab5332624c',
-        harvester: '57c7662befe7b897236bbfa7',
-        Grayson: '57beeeba0591e31e250c3cdd',
-        Julia: '57beeeba0591e31e250c3cdd',
-        Levi: '57beeeba0591e31e250c3cdd'
+        Lillian: '57c63cc7ddd9c8ab5332624c',
     },
     E48N55 : {
         Default: '57cac5bab879478176d2f1d2',
         Levi: '57c7662befe7b897236bbfa7',
         harvester: '57c7662befe7b897236bbfa7',
-        Maria: '57cc430427772ff61fc741f4'
+         Caroline: '57cc430427772ff61fc741f4'
     }
 };
 
@@ -154,8 +142,8 @@ module.exports.MaxCreeps = {
     
     E49N54 : {
         HARVESTER : 0,
-        UPGRADER : 2,
-        BUILDER: 2,
+        UPGRADER : 1,
+        BUILDER: 1,
         GUARD: 0,
         HARVESTER3 : 2,
         TRANSFERER : 4,
@@ -165,25 +153,25 @@ module.exports.MaxCreeps = {
     },
     E48N54 : {
         HARVESTER : 0,
-        UPGRADER : 2,
-        BUILDER: 2,
+        UPGRADER : 1,
+        BUILDER: 1,
         GUARD: 0,
         HARVESTER3 : 1,
         TRANSFERER : 3,
         CLAIMER : 0,
         LINKTRANSFERER: 1,
-        ATTACKER: 1
+        ATTACKER: 0
     },
     E48N55 : {
         HARVESTER : 0,
-        UPGRADER : 2,
-        BUILDER: 2,
+        UPGRADER : 1,
+        BUILDER: 1,
         GUARD: 0,
         HARVESTER3 : 2,
         TRANSFERER : 3,
         CLAIMER : 0,
         LINKTRANSFERER: 1,
-        ATTACKER: 1,
+        ATTACKER: 0,
         ARMER: 1
     }
 };
@@ -232,13 +220,10 @@ module.exports.RoomPositions = {
     RENEWCREEPSPOT: new RoomPosition(20,33, module.exports.RoomNames.MAINROOM),
     RENEWCREEPSPOT2: new RoomPosition(22,34, module.exports.RoomNames.SECONDROOM),
     RENEWCREEPSPOT3:  new RoomPosition(36,30, module.exports.RoomNames.THIRDROOM),
-    LINKTRANSFERERSPOT: new RoomPosition(20,37, module.exports.RoomNames.MAINROOM),
     ATTACKROOMSPOT: new RoomPosition(34,47, module.exports.RoomNames.ATTACKROOM),
     CHECKROOMSPOT: new RoomPosition(34,47, module.exports.RoomNames.ATTACKROOM),
-    SECONDROOMLINKTRANSFERSPOT: new RoomPosition(10,27, module.exports.RoomNames.SECONDROOM),
     FOURTHROOMHARVESTWAITINGSPOT: new RoomPosition(1,33, module.exports.RoomNames.FOURTHROOM),
     FIFTHROOMHARVESTWAITINGSPOT: new RoomPosition(47,24, module.exports.RoomNames.FIFTHROOM),
-    THIRDROOMLINKTRANSFERSPOT: new RoomPosition(37,35, module.exports.RoomNames.THIRDROOM),
 };
 
 module.exports.RenewScreepSpot = {
@@ -246,6 +231,13 @@ module.exports.RenewScreepSpot = {
     E48N54 :  new RoomPosition(22,34, module.exports.RoomNames.SECONDROOM),
     E48N55 :  new RoomPosition(36,30, module.exports.RoomNames.THIRDROOM),
     E49N55 :  new RoomPosition(36,30, module.exports.RoomNames.THIRDROOM),
+};
+
+
+module.exports.LinkTransfererWaitSpot = {
+    E49N54 : new RoomPosition(20,38, 'E49N54'),
+    E48N54 : new RoomPosition(10,27, 'E48N54'),
+    E48N55 : new RoomPosition(37,35, 'E48N55'),
 };
 
 module.exports.RoleHarvestSource = {

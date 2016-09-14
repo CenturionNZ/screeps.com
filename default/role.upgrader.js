@@ -9,6 +9,7 @@ var roleUpgrader = {
  
        
         helper.setWithdrawSource(creep)
+        helper.setHarvestSource(creep)
 
        //ASSIGN TASKS
         if (creep.memory.task == constants.CreepTasks.WITHDRAW && creep.carry.energy == creep.carryCapacity) {
@@ -29,10 +30,23 @@ var roleUpgrader = {
             }
         }
         else if(creep.carry.energy == 0) {
-            if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
-                creep.memory.task = constants.CreepTasks.WITHDRAW
-                creep.say('withdrawing');
+            if (creep.memory.harvestSourceId) {
+    	        if (creep.memory.task != constants.CreepTasks.HARVEST) {
+                    creep.memory.task = constants.CreepTasks.HARVEST 
+                    creep.say('harvesting');
+    	        }
             }
+            else {
+    	        if (creep.memory.task != constants.CreepTasks.WITHDRAW) {
+                    creep.memory.task = constants.CreepTasks.WITHDRAW 
+                    creep.say('withdrawing');
+    	        }
+            }
+	    }
+	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
+	        if (_.sum(creep.carry) == creep.carryCapacity) {
+	            creep.memory.task = null;
+	        }
 	    }
 	    else if(creep.carry.energy > 0) {
 	        if (creep.memory.task != constants.CreepTasks.UPGRADE) {
@@ -47,13 +61,26 @@ var roleUpgrader = {
 	 	      helper.renewCreep(creep); 
 	    }
         else if(creep.memory.task == constants.CreepTasks.UPGRADE) {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+            
+            if (creep.memory.controllerId) {
+                var upgradecontroller = Game.getObjectById(upgradecontroller);
+            }
+            
+            if (!upgradecontroller) {
+                var upgradecontroller = creep.room.controller;
+            }
+            
+            if(creep.upgradeController(upgradecontroller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(upgradecontroller);
             }
         }
-        else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
+   else if(creep.memory.task == constants.CreepTasks.WITHDRAW) {
             
             helper.withdrawEnergy(creep, false);
+        }
+        else if(creep.memory.task == constants.CreepTasks.HARVEST) {
+            
+            helper.harvestSource(creep);
         }
 	}
 };

@@ -9,7 +9,7 @@ var roleHarvester3 = {
         helper.setHarvestSource(creep)
         helper.setTransferSource(creep)
         
-        
+       // console.log(_.sum(creep.carry));
         var emptyContainers = helper.getEmptyContainers(creep);
         //ASSIGN TASKS
         
@@ -26,19 +26,18 @@ var roleHarvester3 = {
                 creep.say('renewing');
             }
         }
-        else if(creep.carry.energy == 0) {
+        else if(_.sum(creep.carry) == 0) {
             if (creep.memory.task != constants.CreepTasks.HARVEST) {
                 creep.memory.task = constants.CreepTasks.HARVEST; 
                 creep.say('harvesting');
             }
 	    }
 	    else if (creep.memory.task == constants.CreepTasks.HARVEST) {
-	        if (creep.carry.energy == creep.carryCapacity) {
+	        if (_.sum(creep.carry) == creep.carryCapacity) {
 	            creep.memory.task = null;
 	        }
-	        
 	    }
-	    else if(creep.carry.energy > 0) {
+	    else if(_.sum(creep.carry) > 0) {
 	        if (creep.memory.task != constants.CreepTasks.TRANSFER) {
     	        creep.memory.task = constants.CreepTasks.TRANSFER 
     	        creep.say('transfering');
@@ -51,26 +50,26 @@ var roleHarvester3 = {
 	    }
         else if(creep.memory.task == constants.CreepTasks.TRANSFER ) {
             
-            if (creep.memory.transferSourceId == null){
-                if (creep.memory.harvestSource == 1) {
-                    creep.memory.transferSourceId = '57b41827a8d0e1d76bf79507';
-                }
-                else 
-                if (creep.memory.harvestSource == 0) {
-                    creep.memory.transferSourceId = '57b44a96eead0db92ed6d3aa';
-                }
-                else {
-                    creep.memory.transferSourceId = '57b41827a8d0e1d76bf79507';
-                }
-            }
-            
+          
             var object = Game.getObjectById(creep.memory.transferSourceId)
-            
                 if (object != null) {
-                    if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(object);
+                    if (creep.carry.energy > 0) {
+                        if(creep.transfer(object, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(object);
+                        }
+                    }
+                    else {
+                        if(creep.transfer(object, RESOURCE_UTRIUM) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(object);
+                         }
+                         
+                         
+                        if(creep.transfer(object, RESOURCE_CATALYST) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(object);
+                         }
+                    }
                 }
-            }
+            
         
         }
         else if(creep.memory.task == constants.CreepTasks.HARVEST) {

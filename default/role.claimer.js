@@ -7,8 +7,6 @@ var roleClaimer = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
-        creep.memory.baseRoom = constants.RoomNames.THIRDROOM;
-        
  	  
  
         creep.memory.task = constants.CreepTasks.CLAIM
@@ -61,7 +59,7 @@ var roleClaimer = {
     //             });
     //             console.log(roomController[0].name)
                 
-                var controllera = Game.getObjectById('579fa9e80700be0674d301af');
+                var controllera = Game.getObjectById('579fa9eb0700be0674d301f2');
                 if (controllera) {
                     var a = creep.claimController(controllera);
                     
